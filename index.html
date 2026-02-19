@@ -685,12 +685,12 @@
     <li><a href="caretips.html">Care Tips</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li>
-      <div class="cart-wrap" onclick="openModal()">
+      <a href="cart.html" class="cart-wrap" style="text-decoration:none">
         <button class="cart-icon" aria-label="Cart">🛒</button>
-        <div class="cart-count" id="cartCount">0</div>
-      </div>
+        <div class="cart-count" id="cartCount" style="display:none">0</div>
+      </a>
     </li>
-    <li><a href="#subscription" class="nav-cta">Subscribe & Save</a></li>
+    <li><a href="cart.html" class="nav-cta">🛒 Checkout</a></li>
   </ul>
   <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -1126,17 +1126,11 @@
   // CART
   function addToCart(name, e) {
     e.stopPropagation();
-    cartItems.push(name);
-    cartCount++;
-    const countEl = document.getElementById('cartCount');
-    countEl.textContent = cartCount;
-    countEl.style.display = 'flex';
-    showToast(`${name} added to cart!`);
-    // Animate button
     const btn = e.target;
     btn.textContent = '✓';
     btn.style.background = 'var(--forest)';
     setTimeout(() => { btn.textContent = '+'; btn.style.background = 'var(--rust)'; }, 1200);
+    showToastWithCart(`${name} added to cart!`);
   }
 
   // TOAST
@@ -1147,26 +1141,18 @@
     setTimeout(() => toast.classList.remove('show'), 2800);
   }
 
-  // CART MODAL
-  function openModal() {
-    const content = document.getElementById('cartModalContent');
-    if (cartItems.length === 0) {
-      content.innerHTML = 'Your cart is empty. Start shopping for your furry friend! 🐾';
-    } else {
-      content.innerHTML = '<ul style="padding-left:1rem; color:#555; font-size:0.9rem; line-height:2">' +
-        cartItems.map(i => `<li>${i}</li>`).join('') +
-        `</ul><p style="margin-top:1rem; font-weight:600; color:var(--rust)">Total: ${cartItems.length} item(s)</p>`;
-    }
-    document.getElementById('cartModal').classList.add('open');
+  function showToastWithCart(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerHTML = `✅ <span>${msg}</span> <a href="cart.html" style="color:#fff;font-weight:700;margin-left:0.6rem;text-decoration:underline;white-space:nowrap">View Cart →</a>`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
   }
 
-  function closeModal() { document.getElementById('cartModal').classList.remove('open'); }
-  function closeModalOutside(e) { if (e.target.id === 'cartModal') closeModal(); }
-
-  function checkout() {
-    closeModal();
-    showToast('Redirecting to checkout... 🛍️');
-  }
+  // CART MODAL → now redirects to cart.html
+  function openModal() { window.location.href = 'cart.html'; }
+  function closeModal() { window.location.href = 'cart.html'; }
+  function closeModalOutside(e) { if (e.target.id === 'cartModal') window.location.href = 'cart.html'; }
+  function checkout() { window.location.href = 'cart.html'; }
 
   // CONSULT MODAL
   function openConsultModal() { document.getElementById('consultModal').classList.add('open'); }
