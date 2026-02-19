@@ -185,12 +185,12 @@
     <li><a href="products.html" class="active">Products</a></li>
     <li><a href="caretips.html">Care Tips</a></li>
     <li>
-      <div class="cart-wrap" onclick="openCart()">
+      <a href="cart.html" class="cart-wrap" style="text-decoration:none">
         <button class="cart-icon">🛒</button>
-        <div class="cart-count" id="cartCount">0</div>
-      </div>
+        <div class="cart-count" id="cartCount" style="display:none">0</div>
+      </a>
     </li>
-    <li><a href="cart.html" class="nav-cta">🛒 View Cart</a></li>
+    <li><a href="cart.html" class="nav-cta">🛒 Checkout</a></li>
   </ul>
   <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
@@ -492,7 +492,7 @@
     cartItems.push(name); cartCount++;
     const c = document.getElementById('cartCount');
     c.textContent = cartCount; c.style.display = 'flex';
-    showToast(`${name} added to cart!`);
+    showToastWithCart(`${name} added to cart!`);
     const btn = e.target;
     btn.textContent = '✓'; btn.style.background = 'var(--forest)';
     setTimeout(() => { btn.textContent = '+'; btn.style.background = 'var(--rust)'; }, 1200);
@@ -514,19 +514,14 @@
   function addModalToCart() {
     for(let i = 0; i < qty; i++) { cartItems.push(currentProduct); cartCount++; }
     const c = document.getElementById('cartCount'); c.textContent = cartCount; c.style.display = 'flex';
-    closeProduct(); showToast(`${qty}x ${currentProduct} added! 🛒`);
+    closeProduct();
+    showToastWithCart(`${qty}× ${currentProduct} added! 🛒`);
   }
 
-  // CART
-  function openCart() {
-    const content = document.getElementById('cartModalContent');
-    content.innerHTML = cartItems.length === 0
-      ? 'Your cart is empty. Start shopping!'
-      : '<ul style="padding-left:1rem;color:#555;font-size:0.9rem;line-height:2">' + cartItems.map(i=>`<li>${i}</li>`).join('') + `</ul><p style="margin-top:1rem;font-weight:700;color:var(--rust)">${cartItems.length} item(s)</p>`;
-    document.getElementById('cartModal').classList.add('open');
-  }
-  function closeCart() { document.getElementById('cartModal').classList.remove('open'); }
-  function checkout() { closeCart(); showToast('Redirecting to checkout... 🛍️'); }
+  // CART — all cart actions go to cart.html
+  function openCart() { window.location.href = 'cart.html'; }
+  function closeCart() { window.location.href = 'cart.html'; }
+  function checkout() { window.location.href = 'cart.html'; }
 
   // PAGINATION
   function setPage(btn) {
@@ -540,6 +535,13 @@
     document.getElementById('toastMsg').textContent = msg;
     const t = document.getElementById('toast'); t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function showToastWithCart(msg) {
+    const t = document.getElementById('toast');
+    t.innerHTML = `✅ <span>${msg}</span> <a href="cart.html" style="color:#fff;font-weight:700;margin-left:0.6rem;text-decoration:underline;white-space:nowrap">View Cart →</a>`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
   }
 
   // Check URL param for filter on load
