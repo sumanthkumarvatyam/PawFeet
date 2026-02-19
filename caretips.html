@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Care Tips — PawFect Pet Food & Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2; --warm: #F5EDE0; --amber: #E8A840;
+    --rust: #C4562A; --forest: #2D5016; --bark: #6B4226;
+    --charcoal: #1A1A1A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(250,247,242,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #e8ddd0; padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 70px; transition: box-shadow 0.3s; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--rust); text-decoration: none; }
+  .logo span { color: var(--amber); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--rust); transition: width 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--rust); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { background: var(--rust); color: white !important; padding: 0.5rem 1.3rem; border-radius: 50px; transition: background 0.2s !important; }
+  .nav-cta:hover { background: var(--bark) !important; }
+  .nav-cta::after { display: none !important; }
+  .cart-wrap { position: relative; cursor: pointer; }
+  .cart-icon { background: none; border: none; font-size: 1.3rem; cursor: pointer; padding: 0.3rem; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 5px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--charcoal); border-radius: 2px; }
+  .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid #e8ddd0; padding: 1.5rem 5%; z-index: 99; flex-direction: column; gap: 1rem; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 1rem; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+
+  /* PAGE HERO */
+  .page-hero {
+    padding: 120px 5% 70px;
+    background: linear-gradient(135deg, var(--forest) 0%, #3d6b20 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero-paw { position: absolute; right: 6%; top: 50%; transform: translateY(-50%); font-size: 12rem; opacity: 0.08; }
+  .page-hero .label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--amber); margin-bottom: 0.6rem; }
+  .page-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.15; margin-bottom: 1rem; color: white; }
+  .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 520px; line-height: 1.7; }
+  .hero-pills { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.8rem; }
+  .hero-pill { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.83rem; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+  .hero-pill:hover { background: var(--amber); border-color: var(--amber); }
+
+  /* BUTTONS */
+  .btn-primary { background: var(--rust); color: white; padding: 0.85rem 2rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+  .btn-primary:hover { background: var(--bark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,86,42,0.3); }
+  .btn-secondary { background: transparent; color: var(--charcoal); padding: 0.85rem 2rem; border: 2px solid #c5b8a8; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+  .btn-secondary:hover { border-color: var(--rust); color: var(--rust); }
+  .btn-green { background: var(--forest); color: white; padding: 0.85rem 2rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+  .btn-green:hover { background: #3d6b20; transform: translateY(-2px); }
+
+  /* SECTION */
+  section { padding: 72px 5%; }
+  .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rust); margin-bottom: 0.7rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 700; color: var(--charcoal); margin-bottom: 1rem; }
+
+  /* PET TABS */
+  .pet-tabs { background: var(--warm); padding: 0 5%; }
+  .pet-tab-row { display: flex; gap: 0; border-bottom: 2px solid #e5d9ca; }
+  .pet-tab { padding: 1rem 1.5rem; border: none; background: none; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; color: #888; transition: all 0.2s; border-bottom: 2px solid transparent; margin-bottom: -2px; display: flex; align-items: center; gap: 0.4rem; }
+  .pet-tab.active { color: var(--rust); border-bottom-color: var(--rust); font-weight: 600; }
+  .pet-tab:hover { color: var(--rust); }
+
+  .tab-content { display: none; padding: 50px 5%; background: var(--warm); }
+  .tab-content.active { display: block; }
+
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+  .tip-card {
+    background: white; border-radius: 20px; padding: 1.8rem;
+    transition: all 0.3s; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 4px solid transparent;
+  }
+  .tip-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); border-left-color: var(--rust); }
+  .tip-icon-wrap { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+  .tip-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .tip-card p { font-size: 0.87rem; color: #777; line-height: 1.65; }
+  .tip-tag { display: inline-block; padding: 0.18rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; margin-top: 0.8rem; }
+
+  /* NUTRITION GUIDE */
+  .nutrition { background: var(--cream); }
+  .nutrition-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 2rem; }
+  .nutrition-visual { background: var(--charcoal); border-radius: 28px; padding: 2.5rem; color: white; }
+  .nutrition-visual h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 1.5rem; }
+  .nutrient-bar { margin-bottom: 1.2rem; }
+  .nutrient-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .nutrient-track { height: 10px; background: rgba(255,255,255,0.1); border-radius: 50px; overflow: hidden; }
+  .nutrient-fill { height: 100%; border-radius: 50px; transition: width 1.5s ease; }
+  .nutrition-tips { }
+  .nutrition-tips h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.2rem; }
+  .nut-tip { display: flex; gap: 1rem; margin-bottom: 1.3rem; align-items: flex-start; }
+  .nut-num { width: 32px; height: 32px; border-radius: 50%; background: var(--rust); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 700; flex-shrink: 0; }
+  .nut-tip h5 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .nut-tip p { font-size: 0.82rem; color: #777; line-height: 1.5; }
+
+  /* FAQ */
+  .faq { background: var(--warm); }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 2rem; }
+  .faq-item { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .faq-question { width: 100%; padding: 1.2rem 1.4rem; background: none; border: none; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: background 0.2s; }
+  .faq-question:hover { background: var(--warm); }
+  .faq-arrow { font-size: 1.1rem; transition: transform 0.3s; flex-shrink: 0; color: var(--rust); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; font-size: 0.86rem; color: #666; line-height: 1.7; padding: 0 1.4rem; }
+  .faq-item.open .faq-answer { max-height: 200px; padding: 0 1.4rem 1.2rem; }
+  .faq-item.open .faq-arrow { transform: rotate(90deg); }
+
+  /* CONSULT SECTION */
+  .consult { background: var(--charcoal); color: white; text-align: center; padding: 80px 5%; }
+  .consult .section-label { color: var(--amber); }
+  .consult h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); color: white; margin-bottom: 1rem; }
+  .consult p { color: #aaa; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; }
+  .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; max-width: 480px; margin: 0 auto 1.5rem; }
+  .slot-btn { padding: 0.7rem; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #ccc; border-radius: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; transition: all 0.2s; }
+  .slot-btn.selected { background: var(--amber); color: white; border-color: var(--amber); font-weight: 600; }
+  .slot-btn:hover:not(.selected) { border-color: var(--amber); color: white; }
+
+  /* BLOG CARDS */
+  .blog { background: var(--cream); }
+  .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .blog-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; cursor: pointer; }
+  .blog-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(0,0,0,0.1); }
+  .blog-thumb { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+  .blog-card:nth-child(1) .blog-thumb { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+  .blog-card:nth-child(2) .blog-thumb { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+  .blog-card:nth-child(3) .blog-thumb { background: linear-gradient(135deg, #e0f7fa, #b2ebf2); }
+  .blog-body { padding: 1.3rem; }
+  .blog-cat { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rust); margin-bottom: 0.4rem; }
+  .blog-body h4 { font-size: 0.98rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4; }
+  .blog-body p { font-size: 0.82rem; color: #888; line-height: 1.5; }
+  .blog-meta { margin-top: 0.8rem; font-size: 0.75rem; color: #bbb; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--forest); color: white; padding: 0.8rem 1.4rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 999; display: flex; align-items: center; gap: 0.5rem; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: white; border-radius: 24px; padding: 2.5rem; max-width: 480px; width: 90%; transform: scale(0.9); transition: transform 0.3s; }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .modal p { color: #777; font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  .modal-close { float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #aaa; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-footer { display: flex; gap: 0.7rem; margin-top: 1rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.4rem; color: #555; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.7rem 1rem; border: 1.5px solid #ddd; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--rust); }
+  .form-group textarea { height: 80px; resize: none; }
+
+  /* FOOTER */
+  footer { background: var(--charcoal); color: #ccc; padding: 60px 5% 30px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.7; color: #999; margin-top: 1rem; }
+  .footer-col h4 { color: white; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col a { text-decoration: none; color: #999; font-size: 0.88rem; transition: color 0.2s; cursor: pointer; }
+  .footer-col a:hover { color: var(--amber); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; color: #666; }
+  .social-links { display: flex; gap: 0.7rem; }
+  .social-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all 0.2s; text-decoration: none; }
+  .social-btn:hover { background: var(--amber); color: white; border-color: var(--amber); }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media(max-width:900px) { .nutrition-layout { grid-template-columns: 1fr; } .faq-grid { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr 1fr; } .slots-grid { grid-template-columns: repeat(2,1fr); } }
+  @media(max-width:600px) { .nav-links { display: none; } .hamburger { display: flex; } .pet-tab { padding: 0.8rem 0.9rem; font-size: 0.8rem; } .footer-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="pawfect-care.html" class="logo">Paw<span>Fect</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="caretips.html" class="active">Care Tips</a></li>
+    <li><div class="cart-wrap"><button class="cart-icon" onclick="showToast('🛒 View cart on Products page')">🛒</button></div></li>
+    <li><a href="products.html" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html" onclick="toggleMenu()">Shop</a>
+  <a href="products.html" onclick="toggleMenu()">Products</a>
+  <a href="caretips.html" onclick="toggleMenu()">Care Tips</a>
+  <a href="products.html" onclick="toggleMenu()">Shop Now →</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="hero-paw">🐾</div>
+  <div class="label">Expert Advice</div>
+  <h1>Pet Care Tips &<br>Nutrition Guides</h1>
+  <p>Science-backed guidance from our team of certified veterinary nutritionists. Keep your companions happy, healthy, and thriving.</p>
+  <div class="hero-pills">
+    <a href="#dog-tips" class="hero-pill">🐶 Dog Care</a>
+    <a href="#cat-tips" class="hero-pill">🐱 Cat Care</a>
+    <a href="#nutrition" class="hero-pill">🥗 Nutrition</a>
+    <a href="#faq" class="hero-pill">❓ FAQ</a>
+    <a href="#consult" class="hero-pill">📅 Free Consult</a>
+  </div>
+</div>
+
+<!-- PET TABS -->
+<div class="pet-tabs" id="dog-tips">
+  <div class="pet-tab-row">
+    <button class="pet-tab active" onclick="switchTab('dog', this)">🐶 Dog Tips</button>
+    <button class="pet-tab" onclick="switchTab('cat', this)" id="cat-tips-tab">🐱 Cat Tips</button>
+    <button class="pet-tab" onclick="switchTab('bird', this)">🦜 Bird Tips</button>
+    <button class="pet-tab" onclick="switchTab('fish', this)">🐟 Fish Tips</button>
+  </div>
+</div>
+
+<!-- DOG TIPS -->
+<div class="tab-content active" id="tab-dog">
+  <div class="section-label">Dog Essentials</div>
+  <h2 class="section-title">Keeping Your Dog in Top Shape</h2>
+  <div class="tips-grid">
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#fff3e0">🍽️</div>
+      <h4>Feed by Weight & Activity</h4>
+      <p>Divide daily portions into 2 meals for adult dogs. Puppies need 3–4 smaller meals. Always check the packaging for breed-specific guidance.</p>
+      <span class="tip-tag" style="background:#fff3e0;color:#e65100">Nutrition</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e8f5e9">💧</div>
+      <h4>Fresh Water, Always</h4>
+      <p>Dogs need approximately 30ml of water per kg of body weight daily. Change the bowl water twice a day and clean bowls weekly.</p>
+      <span class="tip-tag" style="background:#e8f5e9;color:#2e7d32">Hydration</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#fce4ec">🏃</div>
+      <h4>Daily Exercise is Non-Negotiable</h4>
+      <p>Most breeds need 30–60 minutes of physical activity daily. Lack of exercise leads to obesity, anxiety and destructive behavior.</p>
+      <span class="tip-tag" style="background:#fce4ec;color:#c62828">Fitness</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e8eaf6">🦷</div>
+      <h4>Brush Those Teeth!</h4>
+      <p>Dental disease affects 80% of dogs over 3 years. Brush 2–3 times a week with pet-safe toothpaste. Dental chews also help.</p>
+      <span class="tip-tag" style="background:#e8eaf6;color:#283593">Dental</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#f3e5f5">✂️</div>
+      <h4>Regular Grooming</h4>
+      <p>Brush coats 2–3x weekly (daily for long-haired breeds). Professional grooming every 6–8 weeks keeps skin healthy and coats tangle-free.</p>
+      <span class="tip-tag" style="background:#f3e5f5;color:#6a1b9a">Grooming</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e0f7fa">🏥</div>
+      <h4>Annual Vet Checkups</h4>
+      <p>Schedule once-yearly wellness exams. Vaccinations, parasite prevention and early bloodwork can add years to your dog's life.</p>
+      <span class="tip-tag" style="background:#e0f7fa;color:#006064">Health</span>
+    </div>
+  </div>
+</div>
+
+<!-- CAT TIPS -->
+<div class="tab-content" id="tab-cat" id="cat-tips">
+  <div class="section-label">Cat Essentials</div>
+  <h2 class="section-title">Your Cat's Complete Wellness Guide</h2>
+  <div class="tips-grid">
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#fff3e0">🐟</div>
+      <h4>Protein-First Diet</h4>
+      <p>Cats are obligate carnivores. Look for meat as the first ingredient. Avoid high-carb dry foods as the primary diet — they can cause diabetes and obesity.</p>
+      <span class="tip-tag" style="background:#fff3e0;color:#e65100">Nutrition</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e8f5e9">💧</div>
+      <h4>Encourage Hydration</h4>
+      <p>Cats evolved from desert animals and have a low thirst drive. Wet food or a pet water fountain significantly increases daily water intake.</p>
+      <span class="tip-tag" style="background:#e8f5e9;color:#2e7d32">Hydration</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#fce4ec">🪠</div>
+      <h4>Litter Box Hygiene</h4>
+      <p>Scoop daily and do a full change weekly. Provide one box per cat plus one extra. Location matters — avoid near food or high-traffic areas.</p>
+      <span class="tip-tag" style="background:#fce4ec;color:#c62828">Hygiene</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e8eaf6">🧶</div>
+      <h4>Mental Stimulation</h4>
+      <p>Indoor cats need enrichment. Rotate toys, use puzzle feeders, and dedicate at least 15 minutes of interactive play daily to prevent boredom.</p>
+      <span class="tip-tag" style="background:#e8eaf6;color:#283593">Enrichment</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#f3e5f5">😻</div>
+      <h4>Hairball Prevention</h4>
+      <p>Brush long-haired cats daily. Add a hairball-control formula dry food or occasional hairball paste to reduce digestive blockages.</p>
+      <span class="tip-tag" style="background:#f3e5f5;color:#6a1b9a">Grooming</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e0f7fa">🏥</div>
+      <h4>Spay & Neuter</h4>
+      <p>Reduces risks of reproductive cancers, uterine infections and unwanted behaviors. Recommended by age 5–6 months for most cats.</p>
+      <span class="tip-tag" style="background:#e0f7fa;color:#006064">Health</span>
+    </div>
+  </div>
+</div>
+
+<!-- BIRD TIPS -->
+<div class="tab-content" id="tab-bird">
+  <div class="section-label">Bird Essentials</div>
+  <h2 class="section-title">Happy & Healthy Bird Care</h2>
+  <div class="tips-grid">
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#fff9c4">🌻</div>
+      <h4>Varied Diet is Key</h4>
+      <p>Seeds alone are not enough. Supplement with fresh fruits, leafy greens, pellets and occasional protein sources like boiled egg.</p>
+      <span class="tip-tag" style="background:#fff9c4;color:#f57f17">Nutrition</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e8f5e9">🌿</div>
+      <h4>Avoid Toxic Foods</h4>
+      <p>Never feed avocado, chocolate, caffeine, onion or garlic. These are highly toxic to birds, even in tiny amounts.</p>
+      <span class="tip-tag" style="background:#e8f5e9;color:#2e7d32">Safety</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e3f2fd">🪟</div>
+      <h4>Natural Light & Fresh Air</h4>
+      <p>Birds need 10–12 hours of natural light daily for vitamin D synthesis. Keep cages near windows but away from direct draughts.</p>
+      <span class="tip-tag" style="background:#e3f2fd;color:#0277bd">Habitat</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#fce4ec">🧠</div>
+      <h4>Cognitive Enrichment</h4>
+      <p>Intelligent birds like parrots need puzzle toys, training sessions and social interaction to prevent stress and feather plucking.</p>
+      <span class="tip-tag" style="background:#fce4ec;color:#c62828">Enrichment</span>
+    </div>
+  </div>
+</div>
+
+<!-- FISH TIPS -->
+<div class="tab-content" id="tab-fish">
+  <div class="section-label">Fish & Aquatics</div>
+  <h2 class="section-title">Crystal Clear Aquarium Care</h2>
+  <div class="tips-grid">
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e0f7fa">🌡️</div>
+      <h4>Temperature Stability</h4>
+      <p>Most tropical fish thrive at 24–27°C. Sudden temperature swings cause stress and disease. Use a reliable aquarium heater and thermometer.</p>
+      <span class="tip-tag" style="background:#e0f7fa;color:#006064">Environment</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#e8f5e9">🫧</div>
+      <h4>Don't Overfeed</h4>
+      <p>Feed only what fish can consume in 2–3 minutes, twice daily. Overfeeding pollutes water, depletes oxygen and causes fatal ammonia spikes.</p>
+      <span class="tip-tag" style="background:#e8f5e9;color:#2e7d32">Nutrition</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#f3e5f5">🔬</div>
+      <h4>Weekly Water Tests</h4>
+      <p>Test pH, ammonia, nitrite and nitrate weekly. Change 20–25% of tank water every week to maintain a safe, balanced ecosystem.</p>
+      <span class="tip-tag" style="background:#f3e5f5;color:#6a1b9a">Maintenance</span>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon-wrap" style="background:#fff3e0">🪨</div>
+      <h4>Cycle Before Adding Fish</h4>
+      <p>Always cycle a new tank for 4–6 weeks before adding fish. This builds beneficial bacteria that process toxic ammonia and nitrite.</p>
+      <span class="tip-tag" style="background:#fff3e0;color:#e65100">Setup</span>
+    </div>
+  </div>
+</div>
+
+<!-- NUTRITION GUIDE -->
+<section class="nutrition" id="nutrition">
+  <div class="section-label reveal">Feeding Science</div>
+  <h2 class="section-title reveal">What Goes Into Ideal Pet Nutrition?</h2>
+  <div class="nutrition-layout">
+    <div class="nutrition-visual reveal">
+      <h3>🐶 Adult Dog Daily Nutrition</h3>
+      <div class="nutrient-bar">
+        <div class="nutrient-label"><span>Protein</span><span>30%</span></div>
+        <div class="nutrient-track"><div class="nutrient-fill" style="width:30%;background:var(--amber)"></div></div>
+      </div>
+      <div class="nutrient-bar">
+        <div class="nutrient-label"><span>Healthy Fats</span><span>15%</span></div>
+        <div class="nutrient-track"><div class="nutrient-fill" style="width:15%;background:#7CB9E8"></div></div>
+      </div>
+      <div class="nutrient-bar">
+        <div class="nutrient-label"><span>Carbohydrates</span><span>35%</span></div>
+        <div class="nutrient-track"><div class="nutrient-fill" style="width:35%;background:#90EE90"></div></div>
+      </div>
+      <div class="nutrient-bar">
+        <div class="nutrient-label"><span>Fiber</span><span>12%</span></div>
+        <div class="nutrient-track"><div class="nutrient-fill" style="width:12%;background:#FFB6C1"></div></div>
+      </div>
+      <div class="nutrient-bar">
+        <div class="nutrient-label"><span>Vitamins & Minerals</span><span>8%</span></div>
+        <div class="nutrient-track"><div class="nutrient-fill" style="width:8%;background:var(--rust)"></div></div>
+      </div>
+      <p style="color:#aaa;font-size:0.78rem;margin-top:1.2rem">* Values are approximate guidelines for a 10kg adult dog with moderate activity levels.</p>
+    </div>
+    <div class="nutrition-tips reveal">
+      <h3>Label Reading 101</h3>
+      <div class="nut-tip">
+        <div class="nut-num">1</div>
+        <div><h5>Check the First Ingredient</h5><p>Named meat sources (chicken, beef, salmon) should be first. Avoid products where "meal" or "by-product" is listed first.</p></div>
+      </div>
+      <div class="nut-tip">
+        <div class="nut-num">2</div>
+        <div><h5>Avoid These Additives</h5><p>BHA, BHT, ethoxyquin are artificial preservatives linked to health issues. Opt for natural preservatives like vitamin E (tocopherol).</p></div>
+      </div>
+      <div class="nut-tip">
+        <div class="nut-num">3</div>
+        <div><h5>AAFCO Statement Matters</h5><p>Look for "complete and balanced" per AAFCO standards. This means the food meets minimum nutritional requirements for your pet's life stage.</p></div>
+      </div>
+      <div class="nut-tip">
+        <div class="nut-num">4</div>
+        <div><h5>Life Stage Formulas</h5><p>Puppy/kitten, adult and senior formulas differ significantly in protein, calorie and calcium levels. Always match to your pet's age.</p></div>
+      </div>
+      <a href="products.html?filter=health" class="btn-primary" style="margin-top:1rem">Browse Vet-Approved Products →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-label reveal">Common Questions</div>
+  <h2 class="section-title reveal">Pet Parent FAQ</h2>
+  <div class="faq-grid reveal">
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">How often should I feed my adult dog? <span class="faq-arrow">›</span></button>
+      <div class="faq-answer">Most adult dogs do well with 2 meals per day, spaced 8–12 hours apart. Puppies (under 6 months) need 3–4 smaller meals. Large breeds benefit from raised feeders and slow-feed bowls to prevent bloat.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">Is grain-free food better for my pet? <span class="faq-arrow">›</span></button>
+      <div class="faq-answer">Not necessarily for all pets. Grain-free diets benefit dogs with diagnosed grain allergies (rare). However, the FDA has investigated links between grain-free diets and dilated cardiomyopathy (DCM). Consult your vet before switching.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">Can cats eat dog food in a pinch? <span class="faq-arrow">›</span></button>
+      <div class="faq-answer">Occasionally and in small amounts it won't cause immediate harm, but cats must not eat dog food regularly. Dog food lacks taurine, arachidonic acid and adequate protein — all critical for feline health. Long-term feeding causes serious deficiencies.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">How do I transition to a new food? <span class="faq-arrow">›</span></button>
+      <div class="faq-answer">Transition slowly over 7–10 days. Start with 25% new food, 75% old. Move to 50/50 by day 3–4, then 75% new by day 7, and 100% new by day 10. Rushing causes digestive upset, vomiting and diarrhoea.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">What human foods are toxic to pets? <span class="faq-arrow">›</span></button>
+      <div class="faq-answer">Dogs and cats should never have: chocolate, xylitol (in sugar-free gum), grapes, raisins, onions, garlic, macadamia nuts, alcohol, caffeine, avocado, or raw yeast dough. Even small amounts can be fatal.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">How often should I bathe my dog? <span class="faq-arrow">›</span></button>
+      <div class="faq-answer">Most dogs need bathing every 4–6 weeks. Over-bathing strips natural oils, causing dry, itchy skin. Short-haired breeds can go longer between baths. Always use a pH-balanced dog shampoo — human products are too acidic.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK CONSULTATION -->
+<section class="consult" id="consult">
+  <div class="section-label">Free Service</div>
+  <h2>Book a Free Vet Consultation</h2>
+  <p>Get personalised nutrition advice from one of our certified pet nutritionists — no cost, no commitment, 15 minutes of pure expert guidance.</p>
+  <div class="slots-grid">
+    <button class="slot-btn" onclick="selectSlot(this)">Mon 10:00 AM</button>
+    <button class="slot-btn" onclick="selectSlot(this)">Tue 2:00 PM</button>
+    <button class="slot-btn" onclick="selectSlot(this)">Wed 11:00 AM</button>
+    <button class="slot-btn" onclick="selectSlot(this)">Thu 4:00 PM</button>
+    <button class="slot-btn" onclick="selectSlot(this)">Fri 9:00 AM</button>
+    <button class="slot-btn" onclick="selectSlot(this)">Sat 3:00 PM</button>
+  </div>
+  <button class="btn-green" onclick="openBookingForm()">Book My Free Slot →</button>
+</section>
+
+<!-- BLOG SECTION -->
+<section class="blog">
+  <div class="section-label reveal">From Our Vets</div>
+  <h2 class="section-title reveal">Latest Pet Care Articles</h2>
+  <div class="blog-grid">
+    <div class="blog-card reveal" onclick="showToast('Opening: 5 Signs Your Dog Needs a Diet Change')">
+      <div class="blog-thumb">🐕</div>
+      <div class="blog-body">
+        <div class="blog-cat">Dog Nutrition</div>
+        <h4>5 Signs Your Dog Needs a Diet Change</h4>
+        <p>Dull coat, excessive shedding, lethargy — these could be nutritional red flags you're missing.</p>
+        <div class="blog-meta">Dr. Meera Pillai · 4 min read</div>
+      </div>
+    </div>
+    <div class="blog-card reveal" onclick="showToast('Opening: The Indoor Cat Enrichment Guide')">
+      <div class="blog-thumb">🐈</div>
+      <div class="blog-body">
+        <div class="blog-cat">Cat Wellness</div>
+        <h4>The Indoor Cat Enrichment Guide</h4>
+        <p>Keep your indoor cat mentally sharp and physically active with these expert-backed enrichment strategies.</p>
+        <div class="blog-meta">Dr. Anita Rao · 6 min read</div>
+      </div>
+    </div>
+    <div class="blog-card reveal" onclick="showToast('Opening: Setting Up Your First Aquarium')">
+      <div class="blog-thumb">🐠</div>
+      <div class="blog-body">
+        <div class="blog-cat">Aquatic Care</div>
+        <h4>Setting Up Your First Aquarium: A Complete Guide</h4>
+        <p>Everything you need to know about cycling, stocking and maintaining a thriving freshwater tank.</p>
+        <div class="blog-meta">Arjun Gill · 8 min read</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="pawfect-care.html" class="logo">Paw<span style="color:var(--amber)">Fect</span></a>
+      <p>Premium pet food and care essentials, crafted with love and backed by veterinary science.</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="products.html?filter=dog">Dog Food</a></li><li><a href="products.html?filter=cat">Cat Food</a></li><li><a href="products.html?filter=bird">Bird Seeds</a></li><li><a href="products.html?filter=health">Supplements</a></li></ul></div>
+    <div class="footer-col"><h4>Learn</h4><ul><li><a href="#dog-tips">Dog Tips</a></li><li><a href="#cat-tips-tab">Cat Tips</a></li><li><a href="#nutrition">Nutrition Guide</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Vet Partners</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 PawFect. All rights reserved.</span>
+    <div class="social-links"><a class="social-btn" href="#">📸</a><a class="social-btn" href="#">👍</a><a class="social-btn" href="#">🐦</a></div>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookingModal" onclick="if(event.target.id==='bookingModal')closeBooking()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBooking()">×</button>
+    <h3>📅 Complete Your Booking</h3>
+    <p>Selected slot: <strong id="selectedSlotLabel" style="color:var(--rust)">None selected</strong></p>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="bookName" placeholder="e.g. Priya Sharma" />
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="bookEmail" placeholder="priya@email.com" />
+    </div>
+    <div class="form-group">
+      <label>Pet Type</label>
+      <select id="bookPet">
+        <option>Dog</option><option>Cat</option><option>Bird</option><option>Fish</option><option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Your Question (optional)</label>
+      <textarea id="bookQuestion" placeholder="What would you like to discuss?"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeBooking()" style="flex:1">Cancel</button>
+      <button class="btn-primary" onclick="confirmBooking()" style="flex:1">Confirm Booking →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ <span id="toastMsg">Done!</span></div>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').style.boxShadow = window.scrollY > 20 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none';
+  });
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+  const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // PET TABS
+  function switchTab(pet, btn) {
+    document.querySelectorAll('.pet-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + pet).classList.add('active');
+    document.getElementById('tab-' + pet).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // FAQ
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  }
+
+  // SLOT SELECTION
+  let selectedSlot = '';
+  function selectSlot(btn) {
+    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSlot = btn.textContent;
+  }
+
+  // BOOKING MODAL
+  function openBookingForm() {
+    document.getElementById('selectedSlotLabel').textContent = selectedSlot || 'None selected';
+    document.getElementById('bookingModal').classList.add('open');
+  }
+  function closeBooking() { document.getElementById('bookingModal').classList.remove('open'); }
+
+  function confirmBooking() {
+    const name = document.getElementById('bookName').value.trim();
+    const email = document.getElementById('bookEmail').value.trim();
+    if(!selectedSlot) { showToast('⚠️ Please select a time slot first!'); closeBooking(); return; }
+    if(!name) { showToast('⚠️ Please enter your name!'); return; }
+    if(!email || !email.includes('@')) { showToast('⚠️ Please enter a valid email!'); return; }
+    closeBooking();
+    showToast(`✅ Booked! ${name} confirmed for ${selectedSlot}`);
+    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+    selectedSlot = '';
+  }
+
+  function showToast(msg) {
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast'); t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
