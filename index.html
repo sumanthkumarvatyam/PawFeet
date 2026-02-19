@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawFect — Premium Pet Food & Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --warm: #F5EDE0;
+    --amber: #E8A840;
+    --rust: #C4562A;
+    --forest: #2D5016;
+    --bark: #6B4226;
+    --charcoal: #1A1A1A;
+    --mist: #F0EBE3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(250,247,242,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e8ddd0;
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+    transition: all 0.3s;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--rust);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--amber); }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none; align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--charcoal);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -3px; left: 0;
+    width: 0; height: 2px;
+    background: var(--rust);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--rust); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    background: var(--rust);
+    color: white !important;
+    padding: 0.5rem 1.3rem;
+    border-radius: 50px;
+    transition: background 0.2s, transform 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--bark) !important; transform: scale(1.03); }
+  .nav-cta::after { display: none !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 5px;
+  }
+
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--charcoal); border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 100px 5% 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, #f5e6cc 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, #e8f0dd 0%, transparent 50%);
+  }
+
+  .paw-pattern {
+    position: absolute; inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='35' r='12' fill='%236B4226'/%3E%3Ccircle cx='15' cy='20' r='7' fill='%236B4226'/%3E%3Ccircle cx='45' cy='20' r='7' fill='%236B4226'/%3E%3Ccircle cx='22' cy='12' r='5' fill='%236B4226'/%3E%3Ccircle cx='38' cy='12' r='5' fill='%236B4226'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    max-width: 580px;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--forest); color: white;
+    padding: 0.3rem 0.9rem;
+    border-radius: 50px;
+    font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--charcoal);
+    margin-bottom: 1.2rem;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--rust);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  .hero-buttons {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--rust);
+    color: white;
+    padding: 0.85rem 2rem;
+    border: none; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+
+  .btn-primary:hover {
+    background: var(--bark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(196,86,42,0.3);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--charcoal);
+    padding: 0.85rem 2rem;
+    border: 2px solid #c5b8a8;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--rust);
+    color: var(--rust);
+    transform: translateY(-2px);
+  }
+
+  .hero-image {
+    position: absolute; right: 0; bottom: 0;
+    width: 50%; max-width: 650px;
+    animation: fadeRight 0.9s ease 0.3s both;
+    pointer-events: none;
+  }
+
+  .hero-image img {
+    width: 100%; height: 100vh; object-fit: cover;
+    object-position: left;
+    opacity: 0.85;
+  }
+
+  /* TRUST BAR */
+  .trust-bar {
+    background: var(--charcoal);
+    color: white;
+    padding: 1rem 5%;
+    display: flex; align-items: center; justify-content: center;
+    gap: 3rem; flex-wrap: wrap;
+    font-size: 0.85rem; font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .trust-item { display: flex; align-items: center; gap: 0.5rem; }
+  .trust-item span:first-child { font-size: 1.1rem; }
+
+  /* SECTION STYLES */
+  section { padding: 80px 5%; }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.7rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--charcoal);
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1rem; color: #666; max-width: 480px; line-height: 1.7;
+  }
+
+  /* CATEGORIES */
+  .categories { background: var(--warm); }
+
+  .cat-header { text-align: center; margin-bottom: 3rem; }
+  .cat-header .section-sub { margin: 0 auto; }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+    max-width: 1000px; margin: 0 auto;
+  }
+
+  .cat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    position: relative; overflow: hidden;
+  }
+
+  .cat-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--amber);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 0;
+  }
+
+  .cat-card:hover { transform: translateY(-6px); border-color: var(--amber); }
+  .cat-card:hover::before { opacity: 0.05; }
+
+  .cat-card * { position: relative; z-index: 1; }
+
+  .cat-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.8rem; }
+  .cat-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .cat-card p { font-size: 0.82rem; color: #888; }
+
+  /* PRODUCTS */
+  .products-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;
+  }
+
+  .filter-tabs {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.4rem 1.1rem;
+    border-radius: 50px;
+    border: 1.5px solid #ddd;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn.active,
+  .filter-btn:hover {
+    background: var(--rust);
+    border-color: var(--rust);
+    color: white;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+
+  .product-card[data-category]:not(.visible) { display: none; }
+
+  .product-img {
+    height: 200px;
+    background: var(--warm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+    position: relative;
+  }
+
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--forest); color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .product-badge.sale { background: var(--rust); }
+
+  .product-info { padding: 1.2rem; }
+
+  .product-tag {
+    font-size: 0.72rem; color: #aaa;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 0.3rem;
+  }
+
+  .product-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+  .stars { color: var(--amber); font-size: 0.85rem; margin-bottom: 0.5rem; }
+
+  .product-footer {
+    display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;
+  }
+
+  .price { font-size: 1.2rem; font-weight: 700; color: var(--rust); }
+  .price-old { font-size: 0.85rem; color: #bbb; text-decoration: line-through; margin-left: 0.3rem; }
+
+  .add-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--rust); color: white;
+    border: none; font-size: 1.3rem; font-weight: 300;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  .add-btn:hover { background: var(--bark); transform: scale(1.1); }
+
+  /* CARE TIPS */
+  .care { background: var(--charcoal); color: white; }
+  .care .section-title { color: white; }
+  .care .section-sub { color: #aaa; }
+
+  .care-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+    max-width: 1100px; margin: 3rem auto 0;
+  }
+
+  .care-tips { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .tip-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 1.5rem;
+    transition: all 0.3s; cursor: pointer;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+
+  .tip-card:hover { background: rgba(255,255,255,0.1); transform: translateX(6px); }
+
+  .tip-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--amber);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+
+  .tip-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .tip-card p { font-size: 0.83rem; color: #aaa; line-height: 1.5; }
+
+  .care-visual {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .care-visual .big-emoji { font-size: 5rem; margin-bottom: 1rem; display: block; }
+  .care-visual h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .care-visual p { color: #aaa; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+  /* SUBSCRIPTION */
+  .subscription { background: var(--warm); text-align: center; }
+
+  .sub-card {
+    max-width: 650px; margin: 2rem auto 0;
+    background: white; border-radius: 28px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  }
+
+  .sub-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; margin-bottom: 0.7rem;
+  }
+
+  .sub-card p { color: #777; font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6; }
+
+  .sub-form { display: flex; gap: 0.7rem; flex-wrap: wrap; justify-content: center; }
+
+  .sub-input {
+    flex: 1; min-width: 220px;
+    padding: 0.85rem 1.4rem;
+    border: 1.5px solid #ddd;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .sub-input:focus { border-color: var(--rust); }
+
+  .perks {
+    display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .perk { font-size: 0.82rem; color: #888; display: flex; align-items: center; gap: 0.3rem; }
+  .perk span:first-child { color: var(--forest); }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--cream); }
+  .test-header { text-align: center; margin-bottom: 3rem; }
+
+  .test-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px; margin: 0 auto;
+  }
+
+  .test-card {
+    background: white; border-radius: 20px; padding: 1.8rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+  }
+
+  .test-card:hover { transform: translateY(-4px); }
+
+  .test-stars { color: var(--amber); margin-bottom: 0.8rem; }
+  .test-card blockquote { font-size: 0.92rem; line-height: 1.7; color: #555; margin-bottom: 1rem; font-style: italic; }
+  .test-author { display: flex; align-items: center; gap: 0.7rem; }
+  .test-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--warm); display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  .test-name { font-weight: 600; font-size: 0.88rem; }
+  .test-pet { font-size: 0.78rem; color: #aaa; }
+
+  /* FOOTER */
+  footer {
+    background: var(--charcoal); color: #ccc;
+    padding: 60px 5% 30px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem; margin-bottom: 3rem;
+  }
+
+  .footer-brand .logo { color: #fff; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.7; color: #999; }
+
+  .footer-col h4 {
+    color: white; font-size: 0.9rem; font-weight: 600;
+    margin-bottom: 1rem; letter-spacing: 0.5px;
+  }
+
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col a {
+    text-decoration: none; color: #999; font-size: 0.88rem;
+    transition: color 0.2s; cursor: pointer;
+  }
+  .footer-col a:hover { color: var(--amber); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+    font-size: 0.82rem; color: #666;
+  }
+
+  .social-links { display: flex; gap: 0.7rem; }
+  .social-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #ccc; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .social-btn:hover { background: var(--amber); color: white; border-color: var(--amber); }
+
+  /* CART TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--forest); color: white;
+    padding: 0.8rem 1.4rem;
+    border-radius: 12px;
+    font-size: 0.88rem; font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 999;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* CART ICON */
+  .cart-wrap { position: relative; cursor: pointer; }
+  .cart-icon {
+    background: none; border: none;
+    font-size: 1.3rem; cursor: pointer;
+    padding: 0.3rem;
+    transition: transform 0.2s;
+  }
+  .cart-icon:hover { transform: scale(1.1); }
+  .cart-count {
+    position: absolute; top: -4px; right: -6px;
+    background: var(--rust); color: white;
+    width: 18px; height: 18px; border-radius: 50%;
+    font-size: 0.65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    display: none;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: white; border-radius: 24px;
+    padding: 2.5rem; max-width: 480px; width: 90%;
+    transform: scale(0.9); transition: transform 0.3s;
+  }
+
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .modal p { color: #777; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .modal-close {
+    float: right; background: none; border: none;
+    font-size: 1.5rem; cursor: pointer; color: #aaa;
+    margin-top: -0.5rem;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--rust); }
+  .modal-footer { display: flex; gap: 0.7rem; margin-top: 1rem; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 0.85; transform: translateX(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: all 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* MOBILE MENU */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 70px; left: 0; right: 0;
+    background: var(--cream);
+    border-bottom: 1px solid #e8ddd0;
+    padding: 1.5rem 5%;
+    z-index: 99;
+    flex-direction: column; gap: 1rem;
+  }
+
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    text-decoration: none; color: var(--charcoal);
+    font-weight: 500; font-size: 1rem; padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .care-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-image { display: none; }
+    h1 { font-size: 2.4rem; }
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero { padding: 90px 5% 40px; }
+    section { padding: 60px 5%; }
+    .trust-bar { gap: 1.2rem; }
+    .sub-form { flex-direction: column; }
+    .sub-input { min-width: unset; width: 100%; }
+    .products-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">Paw<span>Fect</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="caretips.html">Care Tips</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li>
+      <div class="cart-wrap" onclick="openModal()">
+        <button class="cart-icon" aria-label="Cart">🛒</button>
+        <div class="cart-count" id="cartCount">0</div>
+      </div>
+    </li>
+    <li><a href="#subscription" class="nav-cta">Subscribe & Save</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html" onclick="toggleMenu()">Shop</a>
+  <a href="products.html" onclick="toggleMenu()">Products</a>
+  <a href="caretips.html" onclick="toggleMenu()">Care Tips</a>
+  <a href="#testimonials" onclick="toggleMenu()">Reviews</a>
+  <a href="#subscription" onclick="toggleMenu()">Subscribe & Save</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="paw-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🐾 Trusted by 50,000+ pet owners</div>
+    <h1>Nourish Every<em>Wag & Purr</em></h1>
+    <p class="hero-sub">Premium, vet-approved food and care essentials for your beloved companions. Because they deserve the absolute best.</p>
+    <div class="hero-buttons">
+      <a href="#products" class="btn-primary">🛍️ Shop Now</a>
+      <a href="#care" class="btn-secondary">💡 Care Guide</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&auto=format&fit=crop&q=80" alt="Happy dog" />
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span>🚀</span> Free delivery over ₹999</div>
+  <div class="trust-item"><span>⚕️</span> Vet-approved formulas</div>
+  <div class="trust-item"><span>🌿</span> 100% natural ingredients</div>
+  <div class="trust-item"><span>↩️</span> Easy 30-day returns</div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories" id="categories">
+  <div class="cat-header reveal">
+    <div class="section-label">Browse by Pet</div>
+    <h2 class="section-title">What's Your Furry Friend?</h2>
+    <p class="section-sub">From playful pups to curious cats and everything in between, we've got the perfect care for every companion.</p>
+  </div>
+  <div class="cat-grid reveal">
+    <div class="cat-card" onclick="filterProducts('dog')">
+      <span class="cat-emoji">🐶</span>
+      <h3>Dogs</h3>
+      <p>Premium nutrition for every breed</p>
+    </div>
+    <div class="cat-card" onclick="filterProducts('cat')">
+      <span class="cat-emoji">🐱</span>
+      <h3>Cats</h3>
+      <p>Gourmet meals cats adore</p>
+    </div>
+    <div class="cat-card" onclick="filterProducts('bird')">
+      <span class="cat-emoji">🦜</span>
+      <h3>Birds</h3>
+      <p>Seeds, mixes & supplements</p>
+    </div>
+    <div class="cat-card" onclick="filterProducts('fish')">
+      <span class="cat-emoji">🐟</span>
+      <h3>Fish</h3>
+      <p>Complete aquatic care</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" style="background: var(--cream);">
+  <div class="products-header reveal">
+    <div>
+      <div class="section-label">Our Products</div>
+      <h2 class="section-title">Bestsellers This Week</h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
+      <button class="filter-btn" onclick="filterProducts('dog', this)">Dogs</button>
+      <button class="filter-btn" onclick="filterProducts('cat', this)">Cats</button>
+      <button class="filter-btn" onclick="filterProducts('bird', this)">Birds</button>
+      <button class="filter-btn" onclick="filterProducts('fish', this)">Fish</button>
+    </div>
+  </div>
+
+  <div class="products-grid reveal" id="productsGrid">
+    <!-- Dog Products -->
+    <div class="product-card" data-category="dog">
+      <div class="product-img">🦴 <span class="product-badge">New</span></div>
+      <div class="product-info">
+        <div class="product-tag">Dog · Dry Food</div>
+        <h3>Grain-Free Chicken & Rice Kibble</h3>
+        <div class="stars">★★★★★ (284)</div>
+        <div class="product-footer">
+          <div><span class="price">₹799</span><span class="price-old">₹999</span></div>
+          <button class="add-btn" onclick="addToCart('Grain-Free Kibble', event)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" data-category="dog">
+      <div class="product-img">🥩</div>
+      <div class="product-info">
+        <div class="product-tag">Dog · Wet Food</div>
+        <h3>Real Beef Stew with Veggies</h3>
+        <div class="stars">★★★★☆ (162)</div>
+        <div class="product-footer">
+          <div><span class="price">₹349</span></div>
+          <button class="add-btn" onclick="addToCart('Beef Stew', event)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" data-category="dog">
+      <div class="product-img">💊 <span class="product-badge">Best Seller</span></div>
+      <div class="product-info">
+        <div class="product-tag">Dog · Health</div>
+        <h3>Joint Support Chewable Tablets</h3>
+        <div class="stars">★★★★★ (501)</div>
+        <div class="product-footer">
+          <div><span class="price">₹649</span></div>
+          <button class="add-btn" onclick="addToCart('Joint Tablets', event)">+</button>
+        </div>
+      </div>
+    </div>
+    <!-- Cat Products -->
+    <div class="product-card" data-category="cat">
+      <div class="product-img">🐟 <span class="product-badge sale">Sale</span></div>
+      <div class="product-info">
+        <div class="product-tag">Cat · Wet Food</div>
+        <h3>Tuna & Salmon Gourmet Pouches</h3>
+        <div class="stars">★★★★★ (398)</div>
+        <div class="product-footer">
+          <div><span class="price">₹249</span><span class="price-old">₹320</span></div>
+          <button class="add-btn" onclick="addToCart('Tuna Pouches', event)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" data-category="cat">
+      <div class="product-img">🌿</div>
+      <div class="product-info">
+        <div class="product-tag">Cat · Dental</div>
+        <h3>Catnip Dental Treats</h3>
+        <div class="stars">★★★★☆ (217)</div>
+        <div class="product-footer">
+          <div><span class="price">₹199</span></div>
+          <button class="add-btn" onclick="addToCart('Dental Treats', event)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" data-category="cat">
+      <div class="product-img">🍗</div>
+      <div class="product-info">
+        <div class="product-tag">Cat · Dry Food</div>
+        <h3>Indoor Cat Chicken Crunchies</h3>
+        <div class="stars">★★★★★ (334)</div>
+        <div class="product-footer">
+          <div><span class="price">₹549</span></div>
+          <button class="add-btn" onclick="addToCart('Cat Crunchies', event)">+</button>
+        </div>
+      </div>
+    </div>
+    <!-- Bird Products -->
+    <div class="product-card" data-category="bird">
+      <div class="product-img">🌻 <span class="product-badge">Organic</span></div>
+      <div class="product-info">
+        <div class="product-tag">Bird · Seed Mix</div>
+        <h3>Premium Sunflower & Millet Blend</h3>
+        <div class="stars">★★★★★ (143)</div>
+        <div class="product-footer">
+          <div><span class="price">₹299</span></div>
+          <button class="add-btn" onclick="addToCart('Sunflower Mix', event)">+</button>
+        </div>
+      </div>
+    </div>
+    <!-- Fish Products -->
+    <div class="product-card" data-category="fish">
+      <div class="product-img">🫙 <span class="product-badge">Pro</span></div>
+      <div class="product-info">
+        <div class="product-tag">Fish · Flakes</div>
+        <h3>Tropical Fish Color Enhancing Flakes</h3>
+        <div class="stars">★★★★☆ (89)</div>
+        <div class="product-footer">
+          <div><span class="price">₹199</span></div>
+          <button class="add-btn" onclick="addToCart('Color Flakes', event)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top: 2.5rem; reveal">
+    <button class="btn-secondary" onclick="showAll()">View All Products →</button>
+  </div>
+</section>
+
+<!-- CARE TIPS -->
+<section class="care" id="care">
+  <div class="care-layout">
+    <div>
+      <div class="section-label" style="color: var(--amber);">Expert Advice</div>
+      <h2 class="section-title" style="color:white;">Keep Your Pet<br>Happy & Healthy</h2>
+      <p class="section-sub">Science-backed tips from our team of veterinary nutritionists.</p>
+      <div class="care-tips" style="margin-top:2rem;">
+        <div class="tip-card">
+          <div class="tip-icon">🍽️</div>
+          <div>
+            <h4>Portion Control Matters</h4>
+            <p>Feed based on body weight and activity level. Overfeeding is the #1 cause of pet obesity.</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">💧</div>
+          <div>
+            <h4>Hydration is Key</h4>
+            <p>Pets need fresh water available at all times. Change the bowl twice daily for best health.</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🥗</div>
+          <div>
+            <h4>Balanced Nutrition</h4>
+            <p>Look for protein as the first ingredient. Avoid artificial preservatives and fillers.</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🏥</div>
+          <div>
+            <h4>Regular Vet Visits</h4>
+            <p>Annual checkups catch issues early. Prevention is always more affordable than treatment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="care-visual reveal">
+      <span class="big-emoji">🐾</span>
+      <h3>Free Nutrition Consultation</h3>
+      <p>Book a 15-minute video call with one of our certified pet nutritionists — completely free for PawFect members.</p>
+      <button class="btn-primary" style="margin: 0 auto;" onclick="openConsultModal()">Book Free Call →</button>
+    </div>
+  </div>
+</section>
+
+<!-- SUBSCRIPTION -->
+<section class="subscription" id="subscription">
+  <div class="reveal">
+    <div class="section-label" style="text-align:center">Never Run Out</div>
+    <h2 class="section-title" style="text-align:center">Subscribe & Save 20%</h2>
+    <p class="section-sub" style="text-align:center; margin: 0 auto;">Join 12,000+ happy pet parents getting monthly deliveries on their schedule.</p>
+  </div>
+  <div class="sub-card reveal">
+    <h3>Get Monthly Deals in Your Inbox</h3>
+    <p>Be the first to know about new arrivals, vet tips, limited offers, and subscriber-only discounts.</p>
+    <div class="sub-form">
+      <input class="sub-input" type="email" id="emailInput" placeholder="your@email.com" />
+      <button class="btn-primary" onclick="handleSubscribe()">Subscribe Free</button>
+    </div>
+    <div class="perks">
+      <div class="perk"><span>✓</span> No spam, ever</div>
+      <div class="perk"><span>✓</span> Cancel anytime</div>
+      <div class="perk"><span>✓</span> Exclusive member pricing</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="test-header reveal">
+    <div class="section-label">Real Reviews</div>
+    <h2 class="section-title">Pet Parents Love PawFect</h2>
+  </div>
+  <div class="test-grid">
+    <div class="test-card reveal">
+      <div class="test-stars">★★★★★</div>
+      <blockquote>"My golden retriever's coat is so much shinier since switching to PawFect. The grain-free kibble is genuinely a game changer."</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">😊</div>
+        <div><div class="test-name">Priya Sharma</div><div class="test-pet">🐶 Bruno, 4 years</div></div>
+      </div>
+    </div>
+    <div class="test-card reveal">
+      <div class="test-stars">★★★★★</div>
+      <blockquote>"My picky cat finally eats without fuss. The tuna pouches are a hit every single time. Fast delivery too!"</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">😄</div>
+        <div><div class="test-name">Arjun Mehta</div><div class="test-pet">🐱 Luna, 2 years</div></div>
+      </div>
+    </div>
+    <div class="test-card reveal">
+      <div class="test-stars">★★★★★</div>
+      <blockquote>"The free nutrition consultation blew my mind. The vet suggested a new diet plan and my dog lost 3kg in 2 months!"</blockquote>
+      <div class="test-author">
+        <div class="test-avatar">🙂</div>
+        <div><div class="test-name">Kavitha Reddy</div><div class="test-pet">🐶 Max, 7 years</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#home" class="logo">Paw<span style="color:var(--amber)">Fect</span></a>
+      <p>Premium pet food and care essentials, crafted with love and backed by veterinary science. Your pet's wellbeing is our mission.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#products">Dog Food</a></li>
+        <li><a href="#products">Cat Food</a></li>
+        <li><a href="#products">Bird Seeds</a></li>
+        <li><a href="#products">Fish Care</a></li>
+        <li><a href="#products">Health Supplements</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#care">Nutrition Guide</a></li>
+        <li><a href="#care">Free Consultation</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns Policy</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Vet Partners</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 PawFect. All rights reserved.</span>
+    <div class="social-links">
+      <a class="social-btn" href="#" aria-label="Instagram">📸</a>
+      <a class="social-btn" href="#" aria-label="Facebook">👍</a>
+      <a class="social-btn" href="#" aria-label="Twitter">🐦</a>
+      <a class="social-btn" href="#" aria-label="YouTube">▶️</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART MODAL -->
+<div class="modal-overlay" id="cartModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h3>🛒 Your Cart</h3>
+    <p id="cartModalContent">Your cart is empty. Start shopping for your furry friend!</p>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()" style="flex:1">Continue Shopping</button>
+      <button class="btn-primary" onclick="checkout()" style="flex:1">Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONSULT MODAL -->
+<div class="modal-overlay" id="consultModal" onclick="closeConsultOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeConsultModal()">×</button>
+    <h3>📅 Book Free Consultation</h3>
+    <p>Choose your preferred time slot and we'll connect you with a certified vet nutritionist.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; margin-bottom:1rem;">
+      <button class="filter-btn" onclick="selectSlot(this)">Mon 10:00 AM</button>
+      <button class="filter-btn" onclick="selectSlot(this)">Tue 2:00 PM</button>
+      <button class="filter-btn" onclick="selectSlot(this)">Wed 11:00 AM</button>
+      <button class="filter-btn" onclick="selectSlot(this)">Thu 4:00 PM</button>
+      <button class="filter-btn" onclick="selectSlot(this)">Fri 9:00 AM</button>
+      <button class="filter-btn" onclick="selectSlot(this)">Sat 3:00 PM</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeConsultModal()" style="flex:1">Cancel</button>
+      <button class="btn-primary" onclick="confirmBooking()" style="flex:1">Confirm Booking →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ <span id="toastMsg">Item added to cart!</span></div>
+
+<script>
+  let cartItems = [];
+  let cartCount = 0;
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // NAV SCROLL
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.style.boxShadow = window.scrollY > 20 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none';
+  });
+
+  // HAMBURGER
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('open');
+  }
+
+  // FILTER PRODUCTS
+  function filterProducts(category, btn) {
+    const cards = document.querySelectorAll('.product-card');
+    cards.forEach(card => {
+      if (category === 'all' || card.dataset.category === category) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    // Update filter buttons
+    if (btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    // Scroll to products
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function showAll() {
+    filterProducts('all');
+    showToast('Showing all products!');
+  }
+
+  // CART
+  function addToCart(name, e) {
+    e.stopPropagation();
+    cartItems.push(name);
+    cartCount++;
+    const countEl = document.getElementById('cartCount');
+    countEl.textContent = cartCount;
+    countEl.style.display = 'flex';
+    showToast(`${name} added to cart!`);
+    // Animate button
+    const btn = e.target;
+    btn.textContent = '✓';
+    btn.style.background = 'var(--forest)';
+    setTimeout(() => { btn.textContent = '+'; btn.style.background = 'var(--rust)'; }, 1200);
+  }
+
+  // TOAST
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  // CART MODAL
+  function openModal() {
+    const content = document.getElementById('cartModalContent');
+    if (cartItems.length === 0) {
+      content.innerHTML = 'Your cart is empty. Start shopping for your furry friend! 🐾';
+    } else {
+      content.innerHTML = '<ul style="padding-left:1rem; color:#555; font-size:0.9rem; line-height:2">' +
+        cartItems.map(i => `<li>${i}</li>`).join('') +
+        `</ul><p style="margin-top:1rem; font-weight:600; color:var(--rust)">Total: ${cartItems.length} item(s)</p>`;
+    }
+    document.getElementById('cartModal').classList.add('open');
+  }
+
+  function closeModal() { document.getElementById('cartModal').classList.remove('open'); }
+  function closeModalOutside(e) { if (e.target.id === 'cartModal') closeModal(); }
+
+  function checkout() {
+    closeModal();
+    showToast('Redirecting to checkout... 🛍️');
+  }
+
+  // CONSULT MODAL
+  function openConsultModal() { document.getElementById('consultModal').classList.add('open'); }
+  function closeConsultModal() { document.getElementById('consultModal').classList.remove('open'); }
+  function closeConsultOutside(e) { if (e.target.id === 'consultModal') closeConsultModal(); }
+
+  let selectedSlot = null;
+  function selectSlot(btn) {
+    document.querySelectorAll('#consultModal .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedSlot = btn.textContent;
+  }
+
+  function confirmBooking() {
+    if (!selectedSlot) { showToast('Please select a time slot first!'); return; }
+    closeConsultModal();
+    showToast(`✅ Booked! Consultation on ${selectedSlot}`);
+    selectedSlot = null;
+  }
+
+  // SUBSCRIBE
+  function handleSubscribe() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email || !email.includes('@')) {
+      showToast('⚠️ Please enter a valid email!'); return;
+    }
+    document.getElementById('emailInput').value = '';
+    showToast(`🎉 Welcome! ${email} is subscribed!`);
+  }
+
+  // ENTER on subscribe
+  document.getElementById('emailInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') handleSubscribe();
+  });
+</script>
+</body>
+</html>
