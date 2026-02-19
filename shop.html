@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — PawFect Pet Food & Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2; --warm: #F5EDE0; --amber: #E8A840;
+    --rust: #C4562A; --forest: #2D5016; --bark: #6B4226;
+    --charcoal: #1A1A1A; --mist: #F0EBE3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(250,247,242,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e8ddd0;
+    padding: 0 5%; display: flex; align-items: center; justify-content: space-between;
+    height: 70px; transition: box-shadow 0.3s;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--rust); text-decoration: none; }
+  .logo span { color: var(--amber); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--rust); transition: width 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--rust); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { background: var(--rust); color: white !important; padding: 0.5rem 1.3rem; border-radius: 50px; transition: background 0.2s !important; }
+  .nav-cta:hover { background: var(--bark) !important; }
+  .nav-cta::after { display: none !important; }
+  .cart-wrap { position: relative; cursor: pointer; }
+  .cart-icon { background: none; border: none; font-size: 1.3rem; cursor: pointer; padding: 0.3rem; transition: transform 0.2s; }
+  .cart-icon:hover { transform: scale(1.1); }
+  .cart-count { position: absolute; top: -4px; right: -6px; background: var(--rust); color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 0.65rem; font-weight: 700; display: none; align-items: center; justify-content: center; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 5px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--charcoal); border-radius: 2px; }
+  .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid #e8ddd0; padding: 1.5rem 5%; z-index: 99; flex-direction: column; gap: 1rem; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 1rem; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+
+  /* PAGE HERO */
+  .page-hero {
+    padding: 120px 5% 60px;
+    background: linear-gradient(135deg, var(--warm) 0%, #ede0cd 100%);
+    position: relative; overflow: hidden;
+  }
+  .page-hero::before {
+    content: '🛍️';
+    position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
+    font-size: 10rem; opacity: 0.12;
+  }
+  .page-hero .label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rust); margin-bottom: 0.6rem; }
+  .page-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.15; margin-bottom: 1rem; }
+  .page-hero p { font-size: 1.05rem; color: #666; max-width: 500px; line-height: 1.7; }
+
+  /* TRUST BAR */
+  .trust-bar { background: var(--charcoal); color: white; padding: 0.9rem 5%; display: flex; align-items: center; justify-content: center; gap: 3rem; flex-wrap: wrap; font-size: 0.82rem; font-weight: 500; }
+  .trust-item { display: flex; align-items: center; gap: 0.5rem; }
+
+  /* BUTTONS */
+  .btn-primary { background: var(--rust); color: white; padding: 0.85rem 2rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+  .btn-primary:hover { background: var(--bark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,86,42,0.3); }
+  .btn-secondary { background: transparent; color: var(--charcoal); padding: 0.85rem 2rem; border: 2px solid #c5b8a8; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+  .btn-secondary:hover { border-color: var(--rust); color: var(--rust); transform: translateY(-2px); }
+
+  /* SECTIONS */
+  section { padding: 70px 5%; }
+  .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rust); margin-bottom: 0.7rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 700; color: var(--charcoal); margin-bottom: 1rem; }
+  .section-sub { font-size: 0.95rem; color: #666; max-width: 500px; line-height: 1.7; }
+
+  /* CATEGORIES GRID */
+  .shop-section { background: var(--cream); }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header .section-sub { margin: 0 auto; }
+
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .shop-card {
+    border-radius: 24px; overflow: hidden;
+    cursor: pointer; position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    text-decoration: none; color: inherit;
+    display: block;
+  }
+  .shop-card:hover { transform: translateY(-8px); box-shadow: 0 20px 48px rgba(0,0,0,0.14); }
+
+  .card-img {
+    height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    position: relative;
+  }
+
+  .shop-card:nth-child(1) .card-img { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+  .shop-card:nth-child(2) .card-img { background: linear-gradient(135deg, #e0f7fa, #b2ebf2); }
+  .shop-card:nth-child(3) .card-img { background: linear-gradient(135deg, #f3e5f5, #e1bee7); }
+  .shop-card:nth-child(4) .card-img { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+  .shop-card:nth-child(5) .card-img { background: linear-gradient(135deg, #fff8e1, #ffecb3); }
+  .shop-card:nth-child(6) .card-img { background: linear-gradient(135deg, #fce4ec, #f8bbd0); }
+
+  .card-count {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(0,0,0,0.15); color: white;
+    padding: 0.2rem 0.7rem; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 600; backdrop-filter: blur(6px);
+  }
+
+  .card-body { background: white; padding: 1.5rem; }
+  .card-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .card-body p { font-size: 0.84rem; color: #888; line-height: 1.5; margin-bottom: 1rem; }
+  .card-link { font-size: 0.85rem; font-weight: 600; color: var(--rust); display: flex; align-items: center; gap: 0.3rem; }
+  .card-arrow { transition: transform 0.2s; }
+  .shop-card:hover .card-arrow { transform: translateX(5px); }
+
+  /* DEALS SECTION */
+  .deals { background: var(--warm); }
+  .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+
+  .deal-card {
+    background: white; border-radius: 18px; padding: 1.5rem;
+    display: flex; align-items: center; gap: 1.2rem;
+    transition: all 0.3s; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .deal-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.1); }
+  .deal-emoji { font-size: 2.5rem; flex-shrink: 0; }
+  .deal-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .deal-info p { font-size: 0.78rem; color: #999; }
+  .deal-badge { margin-left: auto; background: var(--rust); color: white; padding: 0.3rem 0.7rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+
+  /* BRANDS */
+  .brands { background: var(--charcoal); padding: 50px 5%; }
+  .brands h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: white; text-align: center; margin-bottom: 2rem; }
+  .brands-row { display: flex; justify-content: center; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+  .brand-pill {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    color: #ccc; padding: 0.6rem 1.5rem; border-radius: 50px;
+    font-size: 0.88rem; font-weight: 600; letter-spacing: 0.5px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .brand-pill:hover { background: var(--amber); color: white; border-color: var(--amber); }
+
+  /* SUBSCRIBE BANNER */
+  .sub-banner {
+    background: var(--rust); color: white;
+    padding: 60px 5%; text-align: center;
+  }
+  .sub-banner h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.7rem; }
+  .sub-banner p { opacity: 0.85; font-size: 0.95rem; margin-bottom: 1.8rem; }
+  .sub-row { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; max-width: 460px; margin: 0 auto; }
+  .sub-input { flex: 1; min-width: 200px; padding: 0.85rem 1.4rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none; }
+  .btn-white { background: white; color: var(--rust); padding: 0.85rem 2rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-white:hover { background: var(--warm); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer { background: var(--charcoal); color: #ccc; padding: 60px 5% 30px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.7; color: #999; margin-top: 1rem; }
+  .footer-col h4 { color: white; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col a { text-decoration: none; color: #999; font-size: 0.88rem; transition: color 0.2s; cursor: pointer; }
+  .footer-col a:hover { color: var(--amber); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; color: #666; }
+  .social-links { display: flex; gap: 0.7rem; }
+  .social-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #ccc; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all 0.2s; text-decoration: none; }
+  .social-btn:hover { background: var(--amber); color: white; border-color: var(--amber); }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: white; border-radius: 24px; padding: 2.5rem; max-width: 480px; width: 90%; transform: scale(0.9); transition: transform 0.3s; }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .modal p { color: #777; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .modal-close { float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #aaa; margin-top: -0.5rem; transition: color 0.2s; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-footer { display: flex; gap: 0.7rem; margin-top: 1rem; }
+
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--forest); color: white; padding: 0.8rem 1.4rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 999; display: flex; align-items: center; gap: 0.5rem; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media(max-width:900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media(max-width:600px) { .nav-links { display: none; } .hamburger { display: flex; } .footer-grid { grid-template-columns: 1fr; } .trust-bar { gap: 1rem; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="pawfect-care.html" class="logo">Paw<span>Fect</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html" class="active">Shop</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="caretips.html">Care Tips</a></li>
+    <li>
+      <div class="cart-wrap" onclick="openCart()">
+        <button class="cart-icon">🛒</button>
+        <div class="cart-count" id="cartCount">0</div>
+      </div>
+    </li>
+    <li><a href="products.html" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html" onclick="toggleMenu()">Shop</a>
+  <a href="products.html" onclick="toggleMenu()">Products</a>
+  <a href="caretips.html" onclick="toggleMenu()">Care Tips</a>
+  <a href="products.html" onclick="toggleMenu()">Shop Now →</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="label">Our Store</div>
+  <h1>Shop by<br>Category</h1>
+  <p>Everything your pet needs, all in one place. Vet-approved, nature-inspired, delivered to your door.</p>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span>🚀</span> Free delivery over ₹999</div>
+  <div class="trust-item"><span>⚕️</span> Vet-approved</div>
+  <div class="trust-item"><span>🌿</span> Natural ingredients</div>
+  <div class="trust-item"><span>↩️</span> 30-day returns</div>
+</div>
+
+<!-- SHOP CATEGORIES -->
+<section class="shop-section">
+  <div class="section-header reveal">
+    <div class="section-label">Browse All</div>
+    <h2 class="section-title">Find the Perfect Match</h2>
+    <p class="section-sub">Select your pet type to discover curated food and care essentials.</p>
+  </div>
+  <div class="shop-grid">
+    <a href="products.html?filter=dog" class="shop-card reveal">
+      <div class="card-img">🐶 <span class="card-count">48 items</span></div>
+      <div class="card-body">
+        <h3>Dog Food & Care</h3>
+        <p>Grain-free kibble, wet food, treats, supplements & grooming essentials for all breeds.</p>
+        <div class="card-link">Shop Dogs <span class="card-arrow">→</span></div>
+      </div>
+    </a>
+    <a href="products.html?filter=cat" class="shop-card reveal">
+      <div class="card-img">🐱 <span class="card-count">36 items</span></div>
+      <div class="card-body">
+        <h3>Cat Food & Care</h3>
+        <p>Gourmet wet pouches, dry food, hairball control, litter & interactive toys.</p>
+        <div class="card-link">Shop Cats <span class="card-arrow">→</span></div>
+      </div>
+    </a>
+    <a href="products.html?filter=bird" class="shop-card reveal">
+      <div class="card-img">🦜 <span class="card-count">22 items</span></div>
+      <div class="card-body">
+        <h3>Bird Seed & Supplies</h3>
+        <p>Premium seed mixes, vitamin supplements, cages, perches & enrichment toys.</p>
+        <div class="card-link">Shop Birds <span class="card-arrow">→</span></div>
+      </div>
+    </a>
+    <a href="products.html?filter=fish" class="shop-card reveal">
+      <div class="card-img">🐟 <span class="card-count">19 items</span></div>
+      <div class="card-body">
+        <h3>Fish Food & Aquatics</h3>
+        <p>Flakes, pellets, water conditioners, tanks, filters & aquatic décor.</p>
+        <div class="card-link">Shop Fish <span class="card-arrow">→</span></div>
+      </div>
+    </a>
+    <a href="products.html?filter=health" class="shop-card reveal">
+      <div class="card-img">💊 <span class="card-count">31 items</span></div>
+      <div class="card-body">
+        <h3>Health & Vitamins</h3>
+        <p>Vet-formulated supplements, joint support, omega-3s, probiotic chews & more.</p>
+        <div class="card-link">Shop Health <span class="card-arrow">→</span></div>
+      </div>
+    </a>
+    <a href="products.html?filter=grooming" class="shop-card reveal">
+      <div class="card-img">✂️ <span class="card-count">27 items</span></div>
+      <div class="card-body">
+        <h3>Grooming & Hygiene</h3>
+        <p>Shampoos, brushes, dental care, nail clippers & professional grooming tools.</p>
+        <div class="card-link">Shop Grooming <span class="card-arrow">→</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- TODAY'S DEALS -->
+<section class="deals">
+  <div class="reveal">
+    <div class="section-label">Limited Time</div>
+    <h2 class="section-title">Today's Hot Deals 🔥</h2>
+  </div>
+  <div class="deals-grid">
+    <div class="deal-card reveal" onclick="showToast('Grain-Free Kibble added to cart! 🐶')">
+      <div class="deal-emoji">🦴</div>
+      <div class="deal-info"><h4>Grain-Free Kibble 2kg</h4><p>Premium dog dry food</p></div>
+      <div class="deal-badge">20% OFF</div>
+    </div>
+    <div class="deal-card reveal" onclick="showToast('Tuna Pouches added to cart! 🐱')">
+      <div class="deal-emoji">🐟</div>
+      <div class="deal-info"><h4>Tuna & Salmon Pouches</h4><p>Cat gourmet wet food</p></div>
+      <div class="deal-badge">15% OFF</div>
+    </div>
+    <div class="deal-card reveal" onclick="showToast('Joint Tablets added to cart! 💊')">
+      <div class="deal-emoji">💊</div>
+      <div class="deal-info"><h4>Joint Support Tablets</h4><p>Dog health supplement</p></div>
+      <div class="deal-badge">25% OFF</div>
+    </div>
+    <div class="deal-card reveal" onclick="showToast('Seed Mix added to cart! 🦜')">
+      <div class="deal-emoji">🌻</div>
+      <div class="deal-info"><h4>Premium Seed Mix 1kg</h4><p>Bird food organic blend</p></div>
+      <div class="deal-badge">10% OFF</div>
+    </div>
+    <div class="deal-card reveal" onclick="showToast('Cat Shampoo added to cart! 🛁')">
+      <div class="deal-emoji">🛁</div>
+      <div class="deal-info"><h4>Lavender Cat Shampoo</h4><p>Grooming & hygiene</p></div>
+      <div class="deal-badge">30% OFF</div>
+    </div>
+    <div class="deal-card reveal" onclick="showToast('Fish Flakes added to cart! 🐠')">
+      <div class="deal-emoji">🫙</div>
+      <div class="deal-info"><h4>Tropical Fish Flakes</h4><p>Color-enhancing formula</p></div>
+      <div class="deal-badge">18% OFF</div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top: 2rem;">
+    <a href="products.html" class="btn-primary reveal">See All Products →</a>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands">
+  <h3>Trusted Brands We Carry</h3>
+  <div class="brands-row">
+    <div class="brand-pill">Royal Canin</div>
+    <div class="brand-pill">Drools</div>
+    <div class="brand-pill">Pedigree</div>
+    <div class="brand-pill">Whiskas</div>
+    <div class="brand-pill">Farmina</div>
+    <div class="brand-pill">Hills Science</div>
+    <div class="brand-pill">Orijen</div>
+  </div>
+</div>
+
+<!-- SUBSCRIBE BANNER -->
+<div class="sub-banner">
+  <h2>Subscribe & Save 20%</h2>
+  <p>Get monthly deals, vet tips & member-only discounts straight to your inbox.</p>
+  <div class="sub-row">
+    <input class="sub-input" type="email" id="emailInput" placeholder="your@email.com" />
+    <button class="btn-white" onclick="handleSubscribe()">Subscribe</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="pawfect-care.html" class="logo">Paw<span style="color:var(--amber)">Fect</span></a>
+      <p>Premium pet food and care essentials, crafted with love and backed by veterinary science.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="products.html?filter=dog">Dog Food</a></li>
+        <li><a href="products.html?filter=cat">Cat Food</a></li>
+        <li><a href="products.html?filter=bird">Bird Seeds</a></li>
+        <li><a href="products.html?filter=fish">Fish Care</a></li>
+        <li><a href="products.html?filter=health">Supplements</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="caretips.html">Care Tips</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 PawFect. All rights reserved.</span>
+    <div class="social-links">
+      <a class="social-btn" href="#">📸</a>
+      <a class="social-btn" href="#">👍</a>
+      <a class="social-btn" href="#">🐦</a>
+      <a class="social-btn" href="#">▶️</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART MODAL -->
+<div class="modal-overlay" id="cartModal" onclick="if(event.target.id==='cartModal')closeCart()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeCart()">×</button>
+    <h3>🛒 Your Cart</h3>
+    <p id="cartModalContent">Your cart is empty. Browse our deals above!</p>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeCart()" style="flex:1">Continue</button>
+      <button class="btn-primary" onclick="checkout()" style="flex:1">Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ <span id="toastMsg">Done!</span></div>
+
+<script>
+  let cartItems = [], cartCount = 0;
+
+  const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').style.boxShadow = window.scrollY > 20 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none';
+  });
+
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+  function showToast(msg) {
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    cartItems.push(msg.split(' added')[0]);
+    cartCount++;
+    const c = document.getElementById('cartCount');
+    c.textContent = cartCount; c.style.display = 'flex';
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function openCart() {
+    const content = document.getElementById('cartModalContent');
+    content.innerHTML = cartItems.length === 0
+      ? 'Your cart is empty. Browse our deals!'
+      : '<ul style="padding-left:1rem;color:#555;font-size:0.9rem;line-height:2">' + cartItems.map(i=>`<li>${i}</li>`).join('') + `</ul><p style="margin-top:1rem;font-weight:600;color:var(--rust)">${cartItems.length} item(s) in cart</p>`;
+    document.getElementById('cartModal').classList.add('open');
+  }
+
+  function closeCart() { document.getElementById('cartModal').classList.remove('open'); }
+  function checkout() { closeCart(); showToast('Redirecting to checkout... 🛍️'); }
+
+  function handleSubscribe() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email || !email.includes('@')) { showToast('⚠️ Enter a valid email!'); return; }
+    document.getElementById('emailInput').value = '';
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = `🎉 Subscribed: ${email}`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  document.getElementById('emailInput').addEventListener('keypress', e => { if(e.key==='Enter') handleSubscribe(); });
+</script>
+</body>
+</html>
