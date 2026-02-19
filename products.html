@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — PawFect Pet Food & Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2; --warm: #F5EDE0; --amber: #E8A840;
+    --rust: #C4562A; --forest: #2D5016; --bark: #6B4226;
+    --charcoal: #1A1A1A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(250,247,242,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #e8ddd0; padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 70px; transition: box-shadow 0.3s; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--rust); text-decoration: none; }
+  .logo span { color: var(--amber); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--rust); transition: width 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--rust); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { background: var(--rust); color: white !important; padding: 0.5rem 1.3rem; border-radius: 50px; transition: background 0.2s !important; }
+  .nav-cta:hover { background: var(--bark) !important; }
+  .nav-cta::after { display: none !important; }
+  .cart-wrap { position: relative; cursor: pointer; }
+  .cart-icon { background: none; border: none; font-size: 1.3rem; cursor: pointer; padding: 0.3rem; transition: transform 0.2s; }
+  .cart-icon:hover { transform: scale(1.1); }
+  .cart-count { position: absolute; top: -4px; right: -6px; background: var(--rust); color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 0.65rem; font-weight: 700; display: none; align-items: center; justify-content: center; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 5px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--charcoal); border-radius: 2px; }
+  .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid #e8ddd0; padding: 1.5rem 5%; z-index: 99; flex-direction: column; gap: 1rem; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 1rem; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+
+  /* PAGE HERO */
+  .page-hero { padding: 120px 5% 60px; background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%); position: relative; overflow: hidden; }
+  .page-hero::before { content: '🛒'; position: absolute; right: 8%; top: 50%; transform: translateY(-50%); font-size: 10rem; opacity: 0.07; }
+  .page-hero .label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--amber); margin-bottom: 0.6rem; }
+  .page-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.15; margin-bottom: 1rem; color: white; }
+  .page-hero p { font-size: 1.05rem; color: #aaa; max-width: 500px; line-height: 1.7; }
+
+  /* BUTTONS */
+  .btn-primary { background: var(--rust); color: white; padding: 0.85rem 2rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+  .btn-primary:hover { background: var(--bark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,86,42,0.3); }
+  .btn-secondary { background: transparent; color: var(--charcoal); padding: 0.85rem 2rem; border: 2px solid #c5b8a8; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+  .btn-secondary:hover { border-color: var(--rust); color: var(--rust); }
+
+  /* PRODUCTS LAYOUT */
+  .products-layout { display: flex; gap: 2.5rem; padding: 50px 5%; align-items: flex-start; }
+
+  /* SIDEBAR */
+  .sidebar { width: 240px; flex-shrink: 0; position: sticky; top: 90px; }
+  .sidebar-section { background: white; border-radius: 16px; padding: 1.4rem; margin-bottom: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .sidebar-section h4 { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rust); margin-bottom: 1rem; }
+  .filter-option { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; cursor: pointer; font-size: 0.88rem; transition: color 0.2s; }
+  .filter-option:hover { color: var(--rust); }
+  .filter-option input { accent-color: var(--rust); cursor: pointer; }
+  .price-slider { width: 100%; margin-top: 0.5rem; accent-color: var(--rust); cursor: pointer; }
+  .price-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #999; margin-top: 0.4rem; }
+  .sort-select { width: 100%; padding: 0.6rem 0.8rem; border: 1.5px solid #ddd; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; outline: none; transition: border-color 0.2s; }
+  .sort-select:focus { border-color: var(--rust); }
+  .clear-btn { width: 100%; padding: 0.6rem; background: none; border: 1.5px solid #ddd; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; color: #999; transition: all 0.2s; margin-top: 0.5rem; }
+  .clear-btn:hover { border-color: var(--rust); color: var(--rust); }
+
+  /* PRODUCTS MAIN */
+  .products-main { flex: 1; min-width: 0; }
+  .products-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .results-count { font-size: 0.88rem; color: #888; }
+  .results-count strong { color: var(--charcoal); }
+  .view-toggles { display: flex; gap: 0.4rem; }
+  .view-btn { width: 34px; height: 34px; border: 1.5px solid #ddd; border-radius: 8px; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all 0.2s; }
+  .view-btn.active { border-color: var(--rust); background: var(--rust); color: white; }
+
+  /* FILTER TABS */
+  .filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-tab { padding: 0.4rem 1.1rem; border-radius: 50px; border: 1.5px solid #ddd; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .filter-tab.active, .filter-tab:hover { background: var(--rust); border-color: var(--rust); color: white; }
+
+  /* PRODUCT CARDS */
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
+  .products-grid.list-view { grid-template-columns: 1fr; }
+
+  .product-card { background: white; border-radius: 20px; overflow: hidden; transition: all 0.3s; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+  .product-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(0,0,0,0.1); }
+  .product-card.hidden { display: none; }
+
+  .product-img { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; position: relative; }
+  .product-img.dog { background: linear-gradient(135deg, #ffecd2, #fcb69f30); }
+  .product-img.cat { background: linear-gradient(135deg, #e0f7fa, #b2ebf230); }
+  .product-img.bird { background: linear-gradient(135deg, #f3e5f5, #e1bee730); }
+  .product-img.fish { background: linear-gradient(135deg, #e8f5e9, #c8e6c930); }
+  .product-img.health { background: linear-gradient(135deg, #fff8e1, #ffecb330); }
+  .product-img.grooming { background: linear-gradient(135deg, #fce4ec, #f8bbd030); }
+
+  .product-badge { position: absolute; top: 10px; left: 10px; padding: 0.18rem 0.55rem; border-radius: 50px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.3px; }
+  .badge-new { background: var(--forest); color: white; }
+  .badge-sale { background: var(--rust); color: white; }
+  .badge-best { background: var(--amber); color: white; }
+  .badge-organic { background: var(--forest); color: white; }
+
+  .wishlist-btn { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; border-radius: 50%; background: white; border: none; cursor: pointer; font-size: 0.85rem; transition: transform 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  .wishlist-btn:hover { transform: scale(1.15); }
+  .wishlist-btn.liked { background: #ffe0e0; }
+
+  .product-info { padding: 1.1rem; }
+  .product-tag { font-size: 0.7rem; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem; }
+  .product-info h3 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.4rem; line-height: 1.4; }
+  .stars { color: var(--amber); font-size: 0.8rem; }
+  .review-count { color: #bbb; font-size: 0.75rem; margin-left: 0.2rem; }
+  .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.8rem; }
+  .price { font-size: 1.1rem; font-weight: 700; color: var(--rust); }
+  .price-old { font-size: 0.8rem; color: #bbb; text-decoration: line-through; margin-left: 0.3rem; }
+  .add-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--rust); color: white; border: none; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+  .add-btn:hover { background: var(--bark); transform: scale(1.1); }
+
+  /* LIST VIEW */
+  .products-grid.list-view .product-card { display: flex; border-radius: 16px; }
+  .products-grid.list-view .product-img { width: 140px; flex-shrink: 0; height: auto; min-height: 120px; font-size: 2.5rem; }
+  .products-grid.list-view .product-info { flex: 1; padding: 1.2rem; }
+
+  /* PAGINATION */
+  .pagination { display: flex; gap: 0.5rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+  .page-btn { width: 40px; height: 40px; border-radius: 10px; border: 1.5px solid #ddd; background: white; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
+  .page-btn.active { background: var(--rust); border-color: var(--rust); color: white; }
+  .page-btn:hover:not(.active) { border-color: var(--rust); color: var(--rust); }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: white; border-radius: 24px; padding: 2.5rem; max-width: 520px; width: 92%; transform: scale(0.9); transition: transform 0.3s; max-height: 90vh; overflow-y: auto; }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .modal p { color: #777; font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.6; }
+  .modal-close { float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #aaa; transition: color 0.2s; }
+  .modal-close:hover { color: var(--rust); }
+  .modal-big-emoji { font-size: 4rem; text-align: center; display: block; margin-bottom: 1rem; }
+  .modal-price { font-size: 1.5rem; font-weight: 700; color: var(--rust); margin-bottom: 1rem; }
+  .qty-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem; }
+  .qty-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid #ddd; background: none; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: all 0.2s; }
+  .qty-btn:hover { border-color: var(--rust); color: var(--rust); }
+  .qty-display { font-size: 1.1rem; font-weight: 600; min-width: 24px; text-align: center; }
+  .modal-footer { display: flex; gap: 0.7rem; }
+
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--forest); color: white; padding: 0.8rem 1.4rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 999; display: flex; align-items: center; gap: 0.5rem; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* FOOTER */
+  footer { background: var(--charcoal); color: #ccc; padding: 60px 5% 30px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.7; color: #999; margin-top: 1rem; }
+  .footer-col h4 { color: white; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col a { text-decoration: none; color: #999; font-size: 0.88rem; transition: color 0.2s; cursor: pointer; }
+  .footer-col a:hover { color: var(--amber); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; color: #666; }
+  .social-links { display: flex; gap: 0.7rem; }
+  .social-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #ccc; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all 0.2s; text-decoration: none; }
+  .social-btn:hover { background: var(--amber); color: white; border-color: var(--amber); }
+
+  @media(max-width: 860px) {
+    .products-layout { flex-direction: column; }
+    .sidebar { width: 100%; position: static; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media(max-width: 600px) {
+    .nav-links { display: none; } .hamburger { display: flex; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .products-grid.list-view .product-img { width: 100px; font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="pawfect-care.html" class="logo">Paw<span>Fect</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="caretips.html">Care Tips</a></li>
+    <li>
+      <div class="cart-wrap" onclick="openCart()">
+        <button class="cart-icon">🛒</button>
+        <div class="cart-count" id="cartCount">0</div>
+      </div>
+    </li>
+    <li><a href="shop.html" class="nav-cta">Browse Shop</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html" onclick="toggleMenu()">Shop</a>
+  <a href="products.html" onclick="toggleMenu()">Products</a>
+  <a href="caretips.html" onclick="toggleMenu()">Care Tips</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="label">All Products</div>
+  <h1>Find Your Pet's<br>Favourites</h1>
+  <p>Browse our full catalogue of vet-approved food, treats, and care essentials for every pet.</p>
+</div>
+
+<!-- PRODUCTS LAYOUT -->
+<div class="products-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h4>Category</h4>
+      <label class="filter-option"><input type="checkbox" onchange="applySidebarFilter()" value="dog" class="cat-filter"> 🐶 Dog (48)</label>
+      <label class="filter-option"><input type="checkbox" onchange="applySidebarFilter()" value="cat" class="cat-filter"> 🐱 Cat (36)</label>
+      <label class="filter-option"><input type="checkbox" onchange="applySidebarFilter()" value="bird" class="cat-filter"> 🦜 Bird (22)</label>
+      <label class="filter-option"><input type="checkbox" onchange="applySidebarFilter()" value="fish" class="cat-filter"> 🐟 Fish (19)</label>
+      <label class="filter-option"><input type="checkbox" onchange="applySidebarFilter()" value="health" class="cat-filter"> 💊 Health (31)</label>
+      <label class="filter-option"><input type="checkbox" onchange="applySidebarFilter()" value="grooming" class="cat-filter"> ✂️ Grooming (27)</label>
+    </div>
+    <div class="sidebar-section">
+      <h4>Price Range</h4>
+      <input type="range" class="price-slider" min="99" max="2000" value="2000" id="priceRange" oninput="updatePrice(this.value)">
+      <div class="price-labels"><span>₹99</span><span id="priceLabel">₹2000</span></div>
+    </div>
+    <div class="sidebar-section">
+      <h4>Sort By</h4>
+      <select class="sort-select" id="sortSelect" onchange="sortProducts()">
+        <option value="default">Featured</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="rating">Top Rated</option>
+        <option value="newest">Newest First</option>
+      </select>
+    </div>
+    <div class="sidebar-section">
+      <h4>Rating</h4>
+      <label class="filter-option"><input type="radio" name="rating" value="5"> ★★★★★ 5 stars</label>
+      <label class="filter-option"><input type="radio" name="rating" value="4"> ★★★★☆ 4+ stars</label>
+      <label class="filter-option"><input type="radio" name="rating" value="0" checked> All ratings</label>
+    </div>
+    <button class="clear-btn" onclick="clearFilters()">✕ Clear All Filters</button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="products-main">
+    <!-- FILTER TABS -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="tabFilter('all', this)">All</button>
+      <button class="filter-tab" onclick="tabFilter('dog', this)">🐶 Dogs</button>
+      <button class="filter-tab" onclick="tabFilter('cat', this)">🐱 Cats</button>
+      <button class="filter-tab" onclick="tabFilter('bird', this)">🦜 Birds</button>
+      <button class="filter-tab" onclick="tabFilter('fish', this)">🐟 Fish</button>
+      <button class="filter-tab" onclick="tabFilter('health', this)">💊 Health</button>
+      <button class="filter-tab" onclick="tabFilter('grooming', this)">✂️ Grooming</button>
+    </div>
+
+    <div class="products-toolbar">
+      <p class="results-count">Showing <strong id="resultCount">12</strong> products</p>
+      <div class="view-toggles">
+        <button class="view-btn active" onclick="setView('grid', this)" title="Grid view">⊞</button>
+        <button class="view-btn" onclick="setView('list', this)" title="List view">☰</button>
+      </div>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+
+      <!-- DOG -->
+      <div class="product-card" data-cat="dog" data-price="799" data-rating="5" onclick="openProduct('Grain-Free Chicken Kibble','🦴','dog','Grain-free, high-protein kibble made with real chicken. No artificial preservatives. Supports coat health, digestion & energy.','₹799','₹999',284)">
+        <div class="product-img dog"><span>🦴</span><span class="product-badge badge-new">New</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Dog · Dry Food</div><h3>Grain-Free Chicken Kibble</h3><div class="stars">★★★★★ <span class="review-count">(284)</span></div><div class="product-footer"><div><span class="price">₹799</span><span class="price-old">₹999</span></div><button class="add-btn" onclick="addToCart(event,'Grain-Free Kibble')">+</button></div></div>
+      </div>
+
+      <div class="product-card" data-cat="dog" data-price="349" data-rating="4" onclick="openProduct('Real Beef Stew','🥩','dog','Slow-cooked beef with carrots and peas. High in protein, grain-free, ideal for adult dogs. Single-serve can.','₹349','',162)">
+        <div class="product-img dog"><span>🥩</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Dog · Wet Food</div><h3>Real Beef Stew with Veggies</h3><div class="stars">★★★★☆ <span class="review-count">(162)</span></div><div class="product-footer"><div><span class="price">₹349</span></div><button class="add-btn" onclick="addToCart(event,'Beef Stew')">+</button></div></div>
+      </div>
+
+      <div class="product-card" data-cat="dog" data-price="649" data-rating="5" onclick="openProduct('Joint Support Tablets','💊','health','Vet-formulated chewable tablets with glucosamine & chondroitin. Ideal for senior dogs or active large breeds.','₹649','',501)">
+        <div class="product-img dog"><span>💊</span><span class="product-badge badge-best">Best Seller</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Dog · Health</div><h3>Joint Support Chewable Tablets</h3><div class="stars">★★★★★ <span class="review-count">(501)</span></div><div class="product-footer"><div><span class="price">₹649</span></div><button class="add-btn" onclick="addToCart(event,'Joint Tablets')">+</button></div></div>
+      </div>
+
+      <div class="product-card" data-cat="dog" data-price="249" data-rating="4" onclick="openProduct('Peanut Butter Dog Biscuits','🍪','dog','Baked biscuits with natural peanut butter and oats. No added sugar. Great for training rewards.','₹249','',98)">
+        <div class="product-img dog"><span>🍪</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Dog · Treats</div><h3>Peanut Butter Dog Biscuits</h3><div class="stars">★★★★☆ <span class="review-count">(98)</span></div><div class="product-footer"><div><span class="price">₹249</span></div><button class="add-btn" onclick="addToCart(event,'PB Biscuits')">+</button></div></div>
+      </div>
+
+      <!-- CAT -->
+      <div class="product-card" data-cat="cat" data-price="249" data-rating="5" onclick="openProduct('Tuna & Salmon Pouches','🐟','cat','Premium gourmet wet food in a rich broth. Grain-free, no added preservatives. Loved by even the pickiest cats.','₹249','₹320',398)">
+        <div class="product-img cat"><span>🐟</span><span class="product-badge badge-sale">Sale</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Cat · Wet Food</div><h3>Tuna & Salmon Gourmet Pouches</h3><div class="stars">★★★★★ <span class="review-count">(398)</span></div><div class="product-footer"><div><span class="price">₹249</span><span class="price-old">₹320</span></div><button class="add-btn" onclick="addToCart(event,'Tuna Pouches')">+</button></div></div>
+      </div>
+
+      <div class="product-card" data-cat="cat" data-price="199" data-rating="4" onclick="openProduct('Catnip Dental Treats','🌿','cat','Dual-action treats that freshen breath and support dental health. Infused with organic catnip.','₹199','',217)">
+        <div class="product-img cat"><span>🌿</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Cat · Dental</div><h3>Catnip Dental Treats</h3><div class="stars">★★★★☆ <span class="review-count">(217)</span></div><div class="product-footer"><div><span class="price">₹199</span></div><button class="add-btn" onclick="addToCart(event,'Dental Treats')">+</button></div></div>
+      </div>
+
+      <div class="product-card" data-cat="cat" data-price="549" data-rating="5" onclick="openProduct('Indoor Cat Chicken Crunchies','🍗','cat','Specially formulated for indoor cats. Hairball control, weight management & dental crunch in every bite.','₹549','',334)">
+        <div class="product-img cat"><span>🍗</span><span class="product-badge badge-best">Best Seller</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Cat · Dry Food</div><h3>Indoor Cat Chicken Crunchies</h3><div class="stars">★★★★★ <span class="review-count">(334)</span></div><div class="product-footer"><div><span class="price">₹549</span></div><button class="add-btn" onclick="addToCart(event,'Cat Crunchies')">+</button></div></div>
+      </div>
+
+      <!-- BIRD -->
+      <div class="product-card" data-cat="bird" data-price="299" data-rating="5" onclick="openProduct('Premium Sunflower Seed Mix','🌻','bird','100% organic mix of sunflower seeds, millet, safflower and hemp. No artificial colours. 1kg resealable bag.','₹299','',143)">
+        <div class="product-img bird"><span>🌻</span><span class="product-badge badge-organic">Organic</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Bird · Seed Mix</div><h3>Premium Sunflower Seed Mix</h3><div class="stars">★★★★★ <span class="review-count">(143)</span></div><div class="product-footer"><div><span class="price">₹299</span></div><button class="add-btn" onclick="addToCart(event,'Sunflower Mix')">+</button></div></div>
+      </div>
+
+      <div class="product-card" data-cat="bird" data-price="189" data-rating="4" onclick="openProduct('Egg & Biscuit Treat Bar','🥚','bird','High-protein treat bar with egg, wheat and vitamins A, D & E. Perfect for breeding and moulting birds.','₹189','',67)">
+        <div class="product-img bird"><span>🥚</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Bird · Treats</div><h3>Egg & Biscuit Treat Bar</h3><div class="stars">★★★★☆ <span class="review-count">(67)</span></div><div class="product-footer"><div><span class="price">₹189</span></div><button class="add-btn" onclick="addToCart(event,'Egg Bar')">+</button></div></div>
+      </div>
+
+      <!-- FISH -->
+      <div class="product-card" data-cat="fish" data-price="199" data-rating="4" onclick="openProduct('Tropical Fish Color Flakes','🫙','fish','Color-enhancing formula with spirulina and carotenoids. For all tropical freshwater fish. 100g.','₹199','',89)">
+        <div class="product-img fish"><span>🫙</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Fish · Flakes</div><h3>Tropical Fish Color Flakes</h3><div class="stars">★★★★☆ <span class="review-count">(89)</span></div><div class="product-footer"><div><span class="price">₹199</span></div><button class="add-btn" onclick="addToCart(event,'Color Flakes')">+</button></div></div>
+      </div>
+
+      <!-- HEALTH -->
+      <div class="product-card" data-cat="health" data-price="499" data-rating="5" onclick="openProduct('Omega-3 Fish Oil Capsules','🐠','health','High-potency omega-3 for dogs and cats. Supports skin, coat, heart and joint health. 60 soft gel caps.','₹499','₹599',213)">
+        <div class="product-img health"><span>🐠</span><span class="product-badge badge-new">New</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Health · Supplement</div><h3>Omega-3 Fish Oil Capsules</h3><div class="stars">★★★★★ <span class="review-count">(213)</span></div><div class="product-footer"><div><span class="price">₹499</span><span class="price-old">₹599</span></div><button class="add-btn" onclick="addToCart(event,'Omega-3 Oil')">+</button></div></div>
+      </div>
+
+      <!-- GROOMING -->
+      <div class="product-card" data-cat="grooming" data-price="349" data-rating="4" onclick="openProduct('Lavender Dog Shampoo','🛁','grooming','Gentle pH-balanced formula with lavender and aloe vera. Suitable for sensitive skin. Sulfate-free. 250ml.','₹349','',156)">
+        <div class="product-img grooming"><span>🛁</span><button class="wishlist-btn" onclick="toggleWish(event,this)">🤍</button></div>
+        <div class="product-info"><div class="product-tag">Grooming · Shampoo</div><h3>Lavender Dog Shampoo</h3><div class="stars">★★★★☆ <span class="review-count">(156)</span></div><div class="product-footer"><div><span class="price">₹349</span></div><button class="add-btn" onclick="addToCart(event,'Dog Shampoo')">+</button></div></div>
+      </div>
+
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn active" onclick="setPage(this)">1</button>
+      <button class="page-btn" onclick="setPage(this)">2</button>
+      <button class="page-btn" onclick="setPage(this)">3</button>
+      <button class="page-btn" onclick="setPage(this)">4</button>
+      <button class="page-btn" onclick="setPage(this)">→</button>
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="pawfect-care.html" class="logo">Paw<span style="color:var(--amber)">Fect</span></a>
+      <p>Premium pet food and care essentials, crafted with love and backed by veterinary science.</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="#">Dog Food</a></li><li><a href="#">Cat Food</a></li><li><a href="#">Bird Seeds</a></li><li><a href="#">Fish Care</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a href="caretips.html">Care Tips</a></li><li><a href="#">Track Order</a></li><li><a href="#">Returns</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 PawFect. All rights reserved.</span>
+    <div class="social-links"><a class="social-btn" href="#">📸</a><a class="social-btn" href="#">👍</a><a class="social-btn" href="#">🐦</a></div>
+  </div>
+</footer>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal" onclick="if(event.target.id==='productModal')closeProduct()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeProduct()">×</button>
+    <span class="modal-big-emoji" id="modalEmoji">🦴</span>
+    <h3 id="modalTitle">Product</h3>
+    <p id="modalDesc">Description</p>
+    <div class="modal-price" id="modalPrice">₹799</div>
+    <div class="stars" id="modalStars">★★★★★</div>
+    <div class="qty-row" style="margin-top:1rem">
+      <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      <span class="qty-display" id="qtyDisplay">1</span>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+      <span style="color:#999;font-size:0.85rem">units</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeProduct()" style="flex:1">Close</button>
+      <button class="btn-primary" onclick="addModalToCart()" style="flex:1">Add to Cart 🛒</button>
+    </div>
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="modal-overlay" id="cartModal" onclick="if(event.target.id==='cartModal')closeCart()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeCart()">×</button>
+    <h3>🛒 Your Cart</h3>
+    <p id="cartModalContent">Your cart is empty.</p>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeCart()" style="flex:1">Continue</button>
+      <button class="btn-primary" onclick="checkout()" style="flex:1">Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ <span id="toastMsg">Done!</span></div>
+
+<script>
+  let cartItems = [], cartCount = 0, currentProduct = '';
+  let qty = 1;
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').style.boxShadow = window.scrollY > 20 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none';
+  });
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+  // TAB FILTER
+  function tabFilter(cat, btn) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cards = document.querySelectorAll('.product-card');
+    let count = 0;
+    cards.forEach(card => {
+      const match = cat === 'all' || card.dataset.cat === cat;
+      card.classList.toggle('hidden', !match);
+      if(match) count++;
+    });
+    document.getElementById('resultCount').textContent = count;
+    // Uncheck sidebar
+    document.querySelectorAll('.cat-filter').forEach(cb => cb.checked = false);
+  }
+
+  // SIDEBAR FILTER
+  function applySidebarFilter() {
+    const checked = [...document.querySelectorAll('.cat-filter:checked')].map(c => c.value);
+    const maxPrice = parseInt(document.getElementById('priceRange').value);
+    const cards = document.querySelectorAll('.product-card');
+    let count = 0;
+    cards.forEach(card => {
+      const catMatch = checked.length === 0 || checked.includes(card.dataset.cat);
+      const priceMatch = parseInt(card.dataset.price) <= maxPrice;
+      const match = catMatch && priceMatch;
+      card.classList.toggle('hidden', !match);
+      if(match) count++;
+    });
+    document.getElementById('resultCount').textContent = count;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    document.querySelector('.filter-tab').classList.add('active');
+  }
+
+  function updatePrice(val) {
+    document.getElementById('priceLabel').textContent = '₹' + val;
+    applySidebarFilter();
+  }
+
+  function clearFilters() {
+    document.querySelectorAll('.cat-filter').forEach(cb => cb.checked = false);
+    document.getElementById('priceRange').value = 2000;
+    document.getElementById('priceLabel').textContent = '₹2000';
+    document.querySelectorAll('[name="rating"]')[2].checked = true;
+    tabFilter('all', document.querySelector('.filter-tab'));
+  }
+
+  function sortProducts() {
+    const val = document.getElementById('sortSelect').value;
+    const grid = document.getElementById('productsGrid');
+    const cards = [...grid.querySelectorAll('.product-card')];
+    cards.sort((a, b) => {
+      if(val === 'price-low') return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+      if(val === 'price-high') return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+      if(val === 'rating') return parseInt(b.dataset.rating) - parseInt(a.dataset.rating);
+      return 0;
+    });
+    cards.forEach(c => grid.appendChild(c));
+    showToast('Sorted: ' + document.getElementById('sortSelect').options[document.getElementById('sortSelect').selectedIndex].text);
+  }
+
+  function setView(view, btn) {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const grid = document.getElementById('productsGrid');
+    if(view === 'list') grid.classList.add('list-view');
+    else grid.classList.remove('list-view');
+  }
+
+  // WISHLIST
+  function toggleWish(e, btn) {
+    e.stopPropagation();
+    btn.classList.toggle('liked');
+    btn.textContent = btn.classList.contains('liked') ? '❤️' : '🤍';
+    showToast(btn.classList.contains('liked') ? 'Added to wishlist! ❤️' : 'Removed from wishlist');
+  }
+
+  // ADD TO CART
+  function addToCart(e, name) {
+    e.stopPropagation();
+    cartItems.push(name); cartCount++;
+    const c = document.getElementById('cartCount');
+    c.textContent = cartCount; c.style.display = 'flex';
+    showToast(`${name} added to cart!`);
+    const btn = e.target;
+    btn.textContent = '✓'; btn.style.background = 'var(--forest)';
+    setTimeout(() => { btn.textContent = '+'; btn.style.background = 'var(--rust)'; }, 1200);
+  }
+
+  // PRODUCT MODAL
+  function openProduct(title, emoji, cat, desc, price, oldPrice, reviews) {
+    currentProduct = title;
+    qty = 1;
+    document.getElementById('qtyDisplay').textContent = 1;
+    document.getElementById('modalEmoji').textContent = emoji;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalDesc').textContent = desc;
+    document.getElementById('modalPrice').textContent = price + (oldPrice ? '  ' + oldPrice : '');
+    document.getElementById('productModal').classList.add('open');
+  }
+  function closeProduct() { document.getElementById('productModal').classList.remove('open'); }
+  function changeQty(d) { qty = Math.max(1, qty + d); document.getElementById('qtyDisplay').textContent = qty; }
+  function addModalToCart() {
+    for(let i = 0; i < qty; i++) { cartItems.push(currentProduct); cartCount++; }
+    const c = document.getElementById('cartCount'); c.textContent = cartCount; c.style.display = 'flex';
+    closeProduct(); showToast(`${qty}x ${currentProduct} added! 🛒`);
+  }
+
+  // CART
+  function openCart() {
+    const content = document.getElementById('cartModalContent');
+    content.innerHTML = cartItems.length === 0
+      ? 'Your cart is empty. Start shopping!'
+      : '<ul style="padding-left:1rem;color:#555;font-size:0.9rem;line-height:2">' + cartItems.map(i=>`<li>${i}</li>`).join('') + `</ul><p style="margin-top:1rem;font-weight:700;color:var(--rust)">${cartItems.length} item(s)</p>`;
+    document.getElementById('cartModal').classList.add('open');
+  }
+  function closeCart() { document.getElementById('cartModal').classList.remove('open'); }
+  function checkout() { closeCart(); showToast('Redirecting to checkout... 🛍️'); }
+
+  // PAGINATION
+  function setPage(btn) {
+    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Loading page ' + btn.textContent + ' ...');
+  }
+
+  function showToast(msg) {
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast'); t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // Check URL param for filter on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const f = params.get('filter');
+    if(f) {
+      const tab = [...document.querySelectorAll('.filter-tab')].find(t => t.textContent.toLowerCase().includes(f));
+      if(tab) tabFilter(f, tab);
+    }
+  });
+</script>
+</body>
+</html>
