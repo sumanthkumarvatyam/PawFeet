@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart & Checkout — PawFect</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2; --warm: #F5EDE0; --amber: #E8A840;
+    --rust: #C4562A; --forest: #2D5016; --bark: #6B4226;
+    --charcoal: #1A1A1A; --border: #E8DDD0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; min-height: 100vh; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(250,247,242,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 70px; box-shadow: 0 2px 20px rgba(0,0,0,0.05); }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--rust); text-decoration: none; }
+  .logo span { color: var(--amber); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--rust); transition: width 0.3s; }
+  .nav-links a:hover { color: var(--rust); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta { background: var(--rust); color: white !important; padding: 0.5rem 1.3rem; border-radius: 50px; }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--bark) !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 5px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--charcoal); border-radius: 2px; }
+  .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid var(--border); padding: 1.5rem 5%; z-index: 99; flex-direction: column; gap: 1rem; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; color: var(--charcoal); font-weight: 500; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+
+  /* CHECKOUT STEPS */
+  .steps-bar { background: var(--charcoal); padding: 0 5%; margin-top: 70px; }
+  .steps { display: flex; align-items: center; max-width: 600px; margin: 0 auto; }
+  .step { display: flex; align-items: center; gap: 0.5rem; padding: 1.1rem 0; position: relative; cursor: pointer; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.5); font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
+  .step-label { font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.4); transition: color 0.3s; white-space: nowrap; }
+  .step.active .step-num { background: var(--amber); color: var(--charcoal); }
+  .step.active .step-label { color: white; }
+  .step.done .step-num { background: var(--forest); color: white; }
+  .step.done .step-label { color: rgba(255,255,255,0.6); }
+  .step-divider { flex: 1; height: 1px; background: rgba(255,255,255,0.12); margin: 0 0.8rem; }
+
+  /* MAIN LAYOUT */
+  .main-layout { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; padding: 2.5rem 5% 4rem; max-width: 1200px; margin: 0 auto; align-items: start; }
+
+  /* SECTION PANELS */
+  .panel { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 2px 16px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
+  .panel-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 1.4rem; display: flex; align-items: center; gap: 0.5rem; }
+
+  /* CART ITEMS */
+  .cart-item { display: flex; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border); align-items: center; }
+  .cart-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .item-thumb { width: 64px; height: 64px; border-radius: 14px; background: var(--warm); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: #bbb; font-weight: 600; }
+  .item-name { font-size: 0.93rem; font-weight: 600; margin: 0.15rem 0 0.3rem; }
+  .item-price { font-size: 0.92rem; font-weight: 700; color: var(--rust); }
+  .item-controls { display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0; }
+  .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--border); background: none; cursor: pointer; font-size: 1rem; font-weight: 600; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .qty-btn:hover { border-color: var(--rust); color: var(--rust); }
+  .qty-num { font-size: 0.9rem; font-weight: 700; min-width: 20px; text-align: center; }
+  .remove-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 1rem; transition: color 0.2s; padding: 0.2rem; }
+  .remove-btn:hover { color: var(--rust); }
+
+  /* EMPTY CART */
+  .empty-cart { text-align: center; padding: 3rem 1rem; }
+  .empty-cart .big-emoji { font-size: 4rem; display: block; margin-bottom: 1rem; }
+  .empty-cart h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .empty-cart p { color: #aaa; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+  /* COUPON */
+  .coupon-row { display: flex; gap: 0.6rem; margin-top: 1.2rem; }
+  .coupon-input { flex: 1; padding: 0.7rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; }
+  .coupon-input:focus { border-color: var(--rust); }
+  .coupon-btn { padding: 0.7rem 1.3rem; background: var(--charcoal); color: white; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+  .coupon-btn:hover { background: var(--bark); }
+  .coupon-success { font-size: 0.82rem; color: var(--forest); font-weight: 600; margin-top: 0.5rem; display: none; }
+
+  /* ORDER SUMMARY */
+  .summary-row { display: flex; justify-content: space-between; font-size: 0.9rem; padding: 0.5rem 0; }
+  .summary-row.total { font-size: 1.1rem; font-weight: 700; border-top: 2px solid var(--border); margin-top: 0.8rem; padding-top: 0.9rem; }
+  .summary-row .label { color: #777; }
+  .summary-row.total .label { color: var(--charcoal); }
+  .savings { color: var(--forest); font-size: 0.8rem; font-weight: 600; }
+  .delivery-badge { background: #e8f5e9; color: var(--forest); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.72rem; font-weight: 700; }
+
+  /* FORMS */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 0.78rem; font-weight: 600; color: #666; letter-spacing: 0.3px; }
+  .form-group input, .form-group select { padding: 0.7rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; background: white; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--rust); box-shadow: 0 0 0 3px rgba(196,86,42,0.1); }
+  .form-group input.error { border-color: #e53935; }
+  .form-group .err-msg { font-size: 0.74rem; color: #e53935; display: none; }
+  .form-group.has-error .err-msg { display: block; }
+  .form-group.has-error input { border-color: #e53935; }
+
+  /* PAYMENT CARDS */
+  .payment-options { display: flex; gap: 0.7rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
+  .pay-opt { flex: 1; min-width: 100px; padding: 0.9rem 0.7rem; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; text-align: center; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .pay-opt.active { border-color: var(--rust); background: #fff5f2; color: var(--rust); }
+  .pay-opt:hover { border-color: var(--rust); }
+  .pay-opt .pay-icon { font-size: 1.4rem; display: block; margin-bottom: 0.3rem; }
+  .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* CARD INPUT STYLING */
+  .card-number-wrap { position: relative; }
+  .card-type-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; }
+
+  /* SHIPPING OPTIONS */
+  .shipping-options { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem; }
+  .ship-opt { display: flex; align-items: center; gap: 0.9rem; padding: 0.9rem 1rem; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+  .ship-opt.active { border-color: var(--rust); background: #fff5f2; }
+  .ship-opt:hover { border-color: var(--rust); }
+  .ship-opt input[type=radio] { accent-color: var(--rust); width: 16px; height: 16px; flex-shrink: 0; }
+  .ship-info { flex: 1; }
+  .ship-name { font-size: 0.9rem; font-weight: 600; }
+  .ship-eta { font-size: 0.78rem; color: #aaa; }
+  .ship-price { font-size: 0.9rem; font-weight: 700; color: var(--rust); }
+
+  /* BUTTONS */
+  .btn-primary { background: var(--rust); color: white; padding: 0.9rem 2rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.25s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; letter-spacing: 0.3px; }
+  .btn-primary:hover:not(:disabled) { background: var(--bark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,86,42,0.3); }
+  .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: transparent; color: var(--charcoal); padding: 0.75rem 1.5rem; border: 1.5px solid var(--border); border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.4rem; }
+  .btn-secondary:hover { border-color: var(--rust); color: var(--rust); }
+  .btn-back { background: none; border: none; color: #999; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; padding: 0; margin-bottom: 1.5rem; transition: color 0.2s; }
+  .btn-back:hover { color: var(--rust); }
+
+  /* SECURITY BADGES */
+  .security-row { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: 1rem; flex-wrap: wrap; }
+  .sec-badge { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: #aaa; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* SUCCESS SCREEN */
+  .success-screen { text-align: center; padding: 4rem 2rem; animation: fadeUp 0.6s ease; }
+  .success-circle { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--forest), #4a8a25); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem; box-shadow: 0 12px 40px rgba(45,80,22,0.3); }
+  .success-screen h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.7rem; }
+  .success-screen p { color: #777; line-height: 1.7; margin-bottom: 0.4rem; }
+  .order-id { font-size: 0.82rem; background: var(--warm); padding: 0.4rem 1rem; border-radius: 50px; display: inline-block; margin: 1rem 0; font-weight: 600; color: var(--bark); }
+  .success-details { background: var(--warm); border-radius: 16px; padding: 1.5rem; margin: 1.5rem 0; text-align: left; }
+  .success-details h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.8rem; color: #555; letter-spacing: 0.3px; text-transform: uppercase; font-size: 0.72rem; }
+  .success-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 0.3rem 0; }
+  .success-row span:first-child { color: #888; }
+  .success-row span:last-child { font-weight: 600; }
+  .success-actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti-piece { position: absolute; width: 10px; height: 10px; border-radius: 2px; animation: fall linear forwards; }
+
+  /* LOADING */
+  .loading-overlay { position: fixed; inset: 0; background: rgba(250,247,242,0.95); z-index: 500; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .loading-overlay.show { opacity: 1; pointer-events: all; }
+  .spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--rust); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1rem; }
+  .loading-overlay p { color: #777; font-size: 0.9rem; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--forest); color: white; padding: 0.8rem 1.4rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 999; display: flex; align-items: center; gap: 0.5rem; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* PROGRESS BAR */
+  .progress-bar { height: 3px; background: var(--border); }
+  .progress-fill { height: 100%; background: var(--amber); transition: width 0.5s ease; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fall { 0% { top: -10%; opacity: 1; transform: rotate(0deg); } 100% { top: 110%; opacity: 0; transform: rotate(720deg); } }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+  /* RECOMMENDED */
+  .recommended { margin-top: 0; }
+  .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
+  .rec-card { background: var(--warm); border-radius: 14px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; border: 1.5px solid transparent; }
+  .rec-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .rec-emoji { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
+  .rec-name { font-size: 0.78rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .rec-price { font-size: 0.8rem; color: var(--rust); font-weight: 700; margin-bottom: 0.5rem; }
+  .rec-add { width: 100%; padding: 0.35rem; background: var(--rust); color: white; border: none; border-radius: 50px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .rec-add:hover { background: var(--bark); }
+
+  /* CHECKOUT HEADER */
+  .checkout-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+  .checkout-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; }
+
+  /* RESPONSIVE */
+  @media(max-width:900px) { .main-layout { grid-template-columns: 1fr; } .sidebar-summary { position: static !important; } }
+  @media(max-width:600px) { .nav-links { display: none; } .hamburger { display: flex; } .form-grid { grid-template-columns: 1fr; } .steps .step-label { display: none; } .step-divider { min-width: 20px; } .payment-options { flex-wrap: wrap; } .pay-opt { min-width: 80px; } .main-layout { padding: 1.5rem 4%; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="pawfect-care.html" class="logo">Paw<span>Fect</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="caretips.html">Care Tips</a></li>
+    <li><a href="cart.html" style="color:var(--rust);font-weight:600">🛒 Cart</a></li>
+    <li><a href="products.html" class="nav-cta">Continue Shopping</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html" onclick="toggleMenu()">Shop</a>
+  <a href="products.html" onclick="toggleMenu()">Products</a>
+  <a href="caretips.html" onclick="toggleMenu()">Care Tips</a>
+</div>
+
+<!-- CHECKOUT STEPS -->
+<div class="steps-bar">
+  <div class="steps">
+    <div class="step active" id="step1" onclick="goToStep(1)">
+      <div class="step-num" id="s1num">1</div>
+      <span class="step-label">Cart</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step2" onclick="goToStep(2)">
+      <div class="step-num" id="s2num">2</div>
+      <span class="step-label">Shipping</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step3" onclick="goToStep(3)">
+      <div class="step-num" id="s3num">3</div>
+      <span class="step-label">Payment</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step" id="step4">
+      <div class="step-num" id="s4num">4</div>
+      <span class="step-label">Confirm</span>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:25%"></div></div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- LEFT COLUMN -->
+  <div class="left-col">
+
+    <!-- ===== SCREEN 1: CART ===== -->
+    <div class="screen active" id="screen1">
+      <div class="checkout-header">
+        <h1 class="checkout-title">Your Cart 🛒</h1>
+      </div>
+      <p style="color:#aaa;font-size:0.85rem;margin-bottom:1.5rem" id="cartSubtitle">3 items in your cart</p>
+
+      <div class="panel">
+        <div id="cartItemsList">
+          <!-- JS renders items here -->
+        </div>
+        <div id="emptyCart" class="empty-cart" style="display:none">
+          <span class="big-emoji">🛒</span>
+          <h3>Your cart is empty</h3>
+          <p>Looks like you haven't added anything yet. Let's fix that!</p>
+          <a href="products.html" class="btn-primary" style="max-width:220px;margin:0 auto;text-decoration:none">Browse Products →</a>
+        </div>
+
+        <!-- COUPON -->
+        <div id="couponSection" style="margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--border)">
+          <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:0.5rem">🏷️ Have a coupon?</div>
+          <div class="coupon-row">
+            <input class="coupon-input" id="couponInput" type="text" placeholder="e.g. PAWFECT20" />
+            <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+          </div>
+          <div class="coupon-success" id="couponSuccess">✅ Coupon applied! 20% discount added.</div>
+        </div>
+      </div>
+
+      <!-- RECOMMENDED -->
+      <div class="panel recommended" id="recSection">
+        <div class="panel-title">🐾 You might also like</div>
+        <div class="rec-grid">
+          <div class="rec-card" onclick="addRec('Dental Chews', '₹199', '🦷')">
+            <span class="rec-emoji">🦷</span>
+            <div class="rec-name">Dental Chews</div>
+            <div class="rec-price">₹199</div>
+            <button class="rec-add">+ Add</button>
+          </div>
+          <div class="rec-card" onclick="addRec('Omega-3 Oil', '₹499', '🐠')">
+            <span class="rec-emoji">🐠</span>
+            <div class="rec-name">Omega-3 Oil</div>
+            <div class="rec-price">₹499</div>
+            <button class="rec-add">+ Add</button>
+          </div>
+          <div class="rec-card" onclick="addRec('Cat Shampoo', '₹349', '🛁')">
+            <span class="rec-emoji">🛁</span>
+            <div class="rec-name">Cat Shampoo</div>
+            <div class="rec-price">₹349</div>
+            <button class="rec-add">+ Add</button>
+          </div>
+          <div class="rec-card" onclick="addRec('Seed Mix', '₹299', '🌻')">
+            <span class="rec-emoji">🌻</span>
+            <div class="rec-name">Seed Mix</div>
+            <div class="rec-price">₹299</div>
+            <button class="rec-add">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="proceedToShipping()" id="proceedBtn">
+        Proceed to Shipping →
+      </button>
+    </div>
+
+    <!-- ===== SCREEN 2: SHIPPING ===== -->
+    <div class="screen" id="screen2">
+      <button class="btn-back" onclick="goToStep(1)">← Back to Cart</button>
+      <div class="panel">
+        <div class="panel-title">📦 Shipping Details</div>
+        <div class="form-grid">
+          <div class="form-group" id="fg-fname">
+            <label>First Name *</label>
+            <input type="text" id="fname" placeholder="Priya" />
+            <span class="err-msg">Please enter your first name</span>
+          </div>
+          <div class="form-group" id="fg-lname">
+            <label>Last Name *</label>
+            <input type="text" id="lname" placeholder="Sharma" />
+            <span class="err-msg">Please enter your last name</span>
+          </div>
+          <div class="form-group full" id="fg-email">
+            <label>Email Address *</label>
+            <input type="email" id="email" placeholder="priya@email.com" />
+            <span class="err-msg">Please enter a valid email</span>
+          </div>
+          <div class="form-group full" id="fg-phone">
+            <label>Phone Number *</label>
+            <input type="tel" id="phone" placeholder="+91 98765 43210" />
+            <span class="err-msg">Please enter a valid phone number</span>
+          </div>
+          <div class="form-group full" id="fg-address">
+            <label>Street Address *</label>
+            <input type="text" id="address" placeholder="123 MG Road, Koramangala" />
+            <span class="err-msg">Please enter your address</span>
+          </div>
+          <div class="form-group" id="fg-city">
+            <label>City *</label>
+            <input type="text" id="city" placeholder="Bengaluru" />
+            <span class="err-msg">Please enter your city</span>
+          </div>
+          <div class="form-group" id="fg-pincode">
+            <label>Pincode *</label>
+            <input type="text" id="pincode" placeholder="560034" maxlength="6" />
+            <span class="err-msg">Please enter a valid 6-digit pincode</span>
+          </div>
+          <div class="form-group" id="fg-state">
+            <label>State *</label>
+            <select id="state">
+              <option value="">Select State</option>
+              <option>Andhra Pradesh</option><option>Delhi</option><option>Gujarat</option>
+              <option>Karnataka</option><option>Kerala</option><option>Maharashtra</option>
+              <option>Rajasthan</option><option>Tamil Nadu</option><option>Telangana</option>
+              <option>Uttar Pradesh</option><option>West Bengal</option><option>Other</option>
+            </select>
+            <span class="err-msg">Please select a state</span>
+          </div>
+          <div class="form-group">
+            <label>Country</label>
+            <select id="country"><option>India</option><option>Sri Lanka</option><option>Nepal</option><option>Bangladesh</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">🚚 Delivery Method</div>
+        <div class="shipping-options">
+          <label class="ship-opt active" onclick="selectShipping(this, 0, 'Standard Delivery')">
+            <input type="radio" name="shipping" checked>
+            <div class="ship-info">
+              <div class="ship-name">Standard Delivery</div>
+              <div class="ship-eta">4–6 business days</div>
+            </div>
+            <div class="ship-price free-ship">FREE</div>
+          </label>
+          <label class="ship-opt" onclick="selectShipping(this, 99, 'Express Delivery')">
+            <input type="radio" name="shipping">
+            <div class="ship-info">
+              <div class="ship-name">Express Delivery</div>
+              <div class="ship-eta">1–2 business days</div>
+            </div>
+            <div class="ship-price">₹99</div>
+          </label>
+          <label class="ship-opt" onclick="selectShipping(this, 199, 'Same Day Delivery')">
+            <input type="radio" name="shipping">
+            <div class="ship-info">
+              <div class="ship-name">Same Day Delivery</div>
+              <div class="ship-eta">Today by 9 PM (select cities)</div>
+            </div>
+            <div class="ship-price">₹199</div>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="proceedToPayment()">Continue to Payment →</button>
+    </div>
+
+    <!-- ===== SCREEN 3: PAYMENT ===== -->
+    <div class="screen" id="screen3">
+      <button class="btn-back" onclick="goToStep(2)">← Back to Shipping</button>
+      <div class="panel">
+        <div class="panel-title">💳 Payment Method</div>
+        <div class="payment-options">
+          <div class="pay-opt active" onclick="selectPayment(this, 'card')" id="opt-card">
+            <span class="pay-icon">💳</span>Card
+          </div>
+          <div class="pay-opt" onclick="selectPayment(this, 'upi')" id="opt-upi">
+            <span class="pay-icon">📱</span>UPI
+          </div>
+          <div class="pay-opt" onclick="selectPayment(this, 'netbanking')" id="opt-nb">
+            <span class="pay-icon">🏦</span>Net Banking
+          </div>
+          <div class="pay-opt" onclick="selectPayment(this, 'cod')" id="opt-cod">
+            <span class="pay-icon">💵</span>Cash on Delivery
+          </div>
+        </div>
+
+        <!-- CARD FORM -->
+        <div id="payForm-card">
+          <div class="form-group full" style="margin-bottom:1rem" id="fg-cardname">
+            <label>Cardholder Name *</label>
+            <input type="text" id="cardname" placeholder="PRIYA SHARMA" style="text-transform:uppercase" />
+            <span class="err-msg">Please enter cardholder name</span>
+          </div>
+          <div class="form-group full card-number-wrap" style="margin-bottom:1rem" id="fg-cardnum">
+            <label>Card Number *</label>
+            <input type="text" id="cardnum" placeholder="1234  5678  9012  3456" maxlength="19" oninput="formatCard(this)" />
+            <span class="card-type-icon" id="cardTypeIcon">💳</span>
+            <span class="err-msg">Please enter a valid 16-digit card number</span>
+          </div>
+          <div class="card-row">
+            <div class="form-group" id="fg-expiry">
+              <label>Expiry Date *</label>
+              <input type="text" id="expiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+              <span class="err-msg">Invalid expiry date</span>
+            </div>
+            <div class="form-group" id="fg-cvv">
+              <label>CVV *</label>
+              <input type="password" id="cvv" placeholder="•••" maxlength="4" />
+              <span class="err-msg">Enter valid CVV</span>
+            </div>
+          </div>
+          <div style="margin-top:0.8rem;padding:0.7rem 1rem;background:var(--warm);border-radius:10px;font-size:0.78rem;color:#888">
+            🔒 Your card details are encrypted with 256-bit SSL. We never store your full card number.
+          </div>
+        </div>
+
+        <!-- UPI FORM -->
+        <div id="payForm-upi" style="display:none">
+          <div class="form-group" id="fg-upi">
+            <label>UPI ID *</label>
+            <input type="text" id="upiid" placeholder="priya@upi or yourphone@paytm" />
+            <span class="err-msg">Please enter a valid UPI ID</span>
+          </div>
+          <div style="margin-top:1rem;display:flex;gap:0.6rem;flex-wrap:wrap">
+            <span style="font-size:0.78rem;color:#aaa">Quick select:</span>
+            <button onclick="document.getElementById('upiid').value='yourname@gpay'" style="background:var(--warm);border:none;padding:0.3rem 0.8rem;border-radius:50px;font-size:0.78rem;cursor:pointer">Google Pay</button>
+            <button onclick="document.getElementById('upiid').value='yourname@paytm'" style="background:var(--warm);border:none;padding:0.3rem 0.8rem;border-radius:50px;font-size:0.78rem;cursor:pointer">Paytm</button>
+            <button onclick="document.getElementById('upiid').value='yourname@phonepe'" style="background:var(--warm);border:none;padding:0.3rem 0.8rem;border-radius:50px;font-size:0.78rem;cursor:pointer">PhonePe</button>
+          </div>
+        </div>
+
+        <!-- NET BANKING -->
+        <div id="payForm-netbanking" style="display:none">
+          <div class="form-group">
+            <label>Select Bank *</label>
+            <select id="bankSelect">
+              <option value="">Choose your bank</option>
+              <option>State Bank of India</option><option>HDFC Bank</option>
+              <option>ICICI Bank</option><option>Axis Bank</option>
+              <option>Kotak Mahindra Bank</option><option>Punjab National Bank</option>
+              <option>Bank of Baroda</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- COD -->
+        <div id="payForm-cod" style="display:none">
+          <div style="background:var(--warm);border-radius:14px;padding:1.2rem;text-align:center">
+            <div style="font-size:2rem;margin-bottom:0.5rem">💵</div>
+            <div style="font-weight:600;margin-bottom:0.3rem">Pay when your order arrives</div>
+            <div style="font-size:0.83rem;color:#aaa">Cash on Delivery is available for orders up to ₹5,000. A ₹49 handling fee applies.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="padding:1.2rem 1.5rem">
+        <div style="display:flex;align-items:center;gap:0.8rem">
+          <input type="checkbox" id="saveAddr" style="accent-color:var(--rust);width:16px;height:16px">
+          <label for="saveAddr" style="font-size:0.85rem;cursor:pointer">Save this card for future purchases</label>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="placeOrderBtn" onclick="placeOrder()">
+        🔒 Place Order & Pay
+      </button>
+      <div class="security-row">
+        <div class="sec-badge">🔒 SSL Encrypted</div>
+        <div class="sec-badge">🛡️ PCI Compliant</div>
+        <div class="sec-badge">↩️ Easy Returns</div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 4: CONFIRMATION ===== -->
+    <div class="screen" id="screen4">
+      <div class="panel success-screen">
+        <div class="success-circle">✅</div>
+        <h2>Order Placed! 🎉</h2>
+        <p>Thank you! Your furry friend's goodies are on their way.</p>
+        <div class="order-id" id="orderIdLabel">Order #PF-2024-0000</div>
+        <p style="font-size:0.83rem;color:#bbb">A confirmation has been sent to <span id="confEmail" style="color:var(--rust);font-weight:600"></span></p>
+
+        <div class="success-details">
+          <h4>Order Summary</h4>
+          <div id="successItemsList"></div>
+          <div style="border-top:1px solid var(--border);margin-top:0.8rem;padding-top:0.8rem">
+            <div class="success-row"><span>Shipping</span><span id="confShipping">FREE</span></div>
+            <div class="success-row"><span>Total Paid</span><span id="confTotal" style="color:var(--rust);font-weight:700"></span></div>
+          </div>
+          <h4 style="margin-top:1rem">Delivery To</h4>
+          <div class="success-row"><span>Name</span><span id="confName"></span></div>
+          <div class="success-row"><span>Address</span><span id="confAddress"></span></div>
+          <div class="success-row"><span>Estimated Delivery</span><span id="confETA" style="color:var(--forest);font-weight:600"></span></div>
+        </div>
+
+        <div class="success-actions">
+          <a href="products.html" style="text-decoration:none">
+            <button class="btn-secondary">Continue Shopping</button>
+          </a>
+          <button class="btn-primary" style="max-width:200px" onclick="trackOrder()">Track Order 📦</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- RIGHT COLUMN: ORDER SUMMARY SIDEBAR -->
+  <div class="sidebar-summary" style="position:sticky;top:90px">
+    <div class="panel" id="summarySidebar">
+      <div class="panel-title">🧾 Order Summary</div>
+      <div id="summaryItems" style="margin-bottom:1rem"></div>
+      <div id="summaryCalc">
+        <div class="summary-row"><span class="label">Subtotal</span><span id="sumSubtotal">₹0</span></div>
+        <div class="summary-row" id="discountRow" style="display:none"><span class="label savings">🏷️ Discount</span><span class="savings" id="sumDiscount">-₹0</span></div>
+        <div class="summary-row"><span class="label">Shipping</span><span id="sumShipping"><span class="delivery-badge">FREE</span></span></div>
+        <div class="summary-row" id="codRow" style="display:none"><span class="label">COD Fee</span><span>₹49</span></div>
+        <div class="summary-row total"><span class="label">Total</span><span id="sumTotal" style="color:var(--rust)">₹0</span></div>
+      </div>
+      <div style="margin-top:1rem;padding:0.8rem;background:var(--warm);border-radius:10px;font-size:0.78rem;color:#666;display:flex;gap:0.5rem;align-items:flex-start">
+        <span>🌿</span>
+        <span id="freeShipMsg">Add <strong id="freeShipDiff"></strong> more for free delivery!</span>
+      </div>
+    </div>
+
+    <!-- TRUST BADGES -->
+    <div class="panel" style="padding:1.2rem">
+      <div style="display:flex;flex-direction:column;gap:0.8rem">
+        <div style="display:flex;gap:0.7rem;align-items:center;font-size:0.83rem;color:#666"><span style="font-size:1.1rem">🚀</span><span>Free delivery on orders over <strong>₹999</strong></span></div>
+        <div style="display:flex;gap:0.7rem;align-items:center;font-size:0.83rem;color:#666"><span style="font-size:1.1rem">↩️</span><span>Easy <strong>30-day</strong> returns</span></div>
+        <div style="display:flex;gap:0.7rem;align-items:center;font-size:0.83rem;color:#666"><span style="font-size:1.1rem">⚕️</span><span>100% <strong>vet-approved</strong> products</span></div>
+        <div style="display:flex;gap:0.7rem;align-items:center;font-size:0.83rem;color:#666"><span style="font-size:1.1rem">🔒</span><span><strong>Secure</strong> & encrypted checkout</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-layout -->
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p id="loadingMsg">Processing your order...</p>
+</div>
+
+<!-- CONFETTI CONTAINER -->
+<div class="confetti" id="confettiContainer"></div>
+
+<div class="toast" id="toast"><span id="toastMsg">Done!</span></div>
+
+<script>
+  // ===================== DATA =====================
+  const PRICES = {
+    'Grain-Free Kibble': 799, 'Beef Stew': 349, 'Joint Tablets': 649,
+    'Tuna Pouches': 249, 'Dental Treats': 199, 'Cat Crunchies': 549,
+    'Sunflower Mix': 299, 'Color Flakes': 199, 'Omega-3 Oil': 499,
+    'Dog Shampoo': 349, 'PB Biscuits': 249, 'Egg Bar': 189,
+    'Dental Chews': 199, 'Cat Shampoo': 349, 'Seed Mix': 299
+  };
+  const EMOJIS = {
+    'Grain-Free Kibble':'🦴','Beef Stew':'🥩','Joint Tablets':'💊',
+    'Tuna Pouches':'🐟','Dental Treats':'🌿','Cat Crunchies':'🍗',
+    'Sunflower Mix':'🌻','Color Flakes':'🫙','Omega-3 Oil':'🐠',
+    'Dog Shampoo':'🛁','PB Biscuits':'🍪','Egg Bar':'🥚',
+    'Dental Chews':'🦷','Cat Shampoo':'🛁','Seed Mix':'🌻'
+  };
+  const TAGS = {
+    'Grain-Free Kibble':'Dog · Dry Food','Beef Stew':'Dog · Wet Food',
+    'Joint Tablets':'Dog · Health','Tuna Pouches':'Cat · Wet Food',
+    'Dental Treats':'Cat · Dental','Cat Crunchies':'Cat · Dry Food',
+    'Sunflower Mix':'Bird · Seeds','Color Flakes':'Fish · Flakes',
+    'Omega-3 Oil':'Health','Dog Shampoo':'Grooming','PB Biscuits':'Dog · Treats',
+    'Egg Bar':'Bird · Treats','Dental Chews':'Dog · Dental',
+    'Cat Shampoo':'Cat · Grooming','Seed Mix':'Bird · Seeds'
+  };
+
+  let cart = [
+    { name: 'Grain-Free Kibble', qty: 1 },
+    { name: 'Tuna Pouches', qty: 2 },
+    { name: 'Joint Tablets', qty: 1 }
+  ];
+  let couponApplied = false;
+  let currentStep = 1;
+  let shippingCost = 0;
+  let shippingLabel = 'Standard Delivery';
+  let paymentMethod = 'card';
+  let currentProduct = '';
+
+  // ===================== NAV =====================
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+  // ===================== CART RENDER =====================
+  function renderCart() {
+    const list = document.getElementById('cartItemsList');
+    const empty = document.getElementById('emptyCart');
+    const coupon = document.getElementById('couponSection');
+    const rec = document.getElementById('recSection');
+    const proceedBtn = document.getElementById('proceedBtn');
+
+    if (cart.length === 0) {
+      list.innerHTML = '';
+      empty.style.display = 'block';
+      coupon.style.display = 'none';
+      rec.style.display = 'none';
+      proceedBtn.disabled = true;
+      document.getElementById('cartSubtitle').textContent = 'Your cart is empty';
+    } else {
+      empty.style.display = 'none';
+      coupon.style.display = 'block';
+      rec.style.display = 'block';
+      proceedBtn.disabled = false;
+      const totalItems = cart.reduce((a, b) => a + b.qty, 0);
+      document.getElementById('cartSubtitle').textContent = `${totalItems} item${totalItems !== 1 ? 's' : ''} in your cart`;
+
+      list.innerHTML = cart.map((item, i) => `
+        <div class="cart-item" id="cartRow${i}" style="animation:fadeUp 0.3s ease ${i*0.05}s both">
+          <div class="item-thumb">${EMOJIS[item.name] || '🐾'}</div>
+          <div class="item-info">
+            <div class="item-tag">${TAGS[item.name] || 'Pet Care'}</div>
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">₹${(PRICES[item.name] || 0).toLocaleString('en-IN')} <span style="color:#bbb;font-size:0.78rem;font-weight:400">each</span></div>
+          </div>
+          <div class="item-controls">
+            <button class="qty-btn" onclick="changeQty(${i}, -1)">−</button>
+            <div class="qty-num">${item.qty}</div>
+            <button class="qty-btn" onclick="changeQty(${i}, 1)">+</button>
+            <button class="remove-btn" onclick="removeItem(${i})" title="Remove">🗑</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    renderSummary();
+  }
+
+  function changeQty(idx, delta) {
+    cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+    renderCart();
+    showToast(`Updated quantity for ${cart[idx].name}`);
+  }
+
+  function removeItem(idx) {
+    const name = cart[idx].name;
+    cart.splice(idx, 1);
+    renderCart();
+    showToast(`${name} removed from cart`);
+  }
+
+  // ===================== SUMMARY =====================
+  function renderSummary() {
+    const subtotal = cart.reduce((s, i) => s + (PRICES[i.name] || 0) * i.qty, 0);
+    const discount = couponApplied ? Math.round(subtotal * 0.20) : 0;
+    const codFee = paymentMethod === 'cod' ? 49 : 0;
+    const total = subtotal - discount + shippingCost + codFee;
+
+    document.getElementById('sumSubtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+    document.getElementById('sumTotal').textContent = '₹' + total.toLocaleString('en-IN');
+
+    const discRow = document.getElementById('discountRow');
+    if (discount > 0) { discRow.style.display = 'flex'; document.getElementById('sumDiscount').textContent = '-₹' + discount.toLocaleString('en-IN'); }
+    else { discRow.style.display = 'none'; }
+
+    document.getElementById('codRow').style.display = paymentMethod === 'cod' ? 'flex' : 'none';
+
+    if (shippingCost === 0) {
+      document.getElementById('sumShipping').innerHTML = '<span class="delivery-badge">FREE</span>';
+    } else {
+      document.getElementById('sumShipping').textContent = '₹' + shippingCost;
+    }
+
+    // Free shipping message
+    const freeMsg = document.getElementById('freeShipMsg');
+    const diff = 999 - subtotal;
+    if (diff > 0 && shippingCost > 0) {
+      freeMsg.innerHTML = `Add <strong>₹${diff}</strong> more for free delivery!`;
+      document.getElementById('freeShipMsg').parentElement.style.display = 'flex';
+    } else {
+      document.getElementById('freeShipMsg').parentElement.style.display = subtotal >= 999 && shippingCost === 0 ? 'flex' : 'none';
+      freeMsg.innerHTML = '🎉 You qualify for <strong>free delivery</strong>!';
+    }
+
+    // Summary items
+    const summaryItems = document.getElementById('summaryItems');
+    summaryItems.innerHTML = cart.map(item => `
+      <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:0.3rem 0;color:#666">
+        <span>${EMOJIS[item.name] || '🐾'} ${item.name} <span style="color:#aaa">×${item.qty}</span></span>
+        <span style="font-weight:600;color:var(--charcoal)">₹${((PRICES[item.name] || 0)*item.qty).toLocaleString('en-IN')}</span>
+      </div>
+    `).join('') || '<div style="color:#bbb;font-size:0.85rem;text-align:center;padding:0.5rem">No items</div>';
+  }
+
+  // ===================== COUPON =====================
+  function applyCoupon() {
+    const code = document.getElementById('couponInput').value.trim().toUpperCase();
+    if (couponApplied) { showToast('Coupon already applied!'); return; }
+    if (code === 'PAWFECT20' || code === 'PET10' || code === 'SAVE20') {
+      couponApplied = true;
+      document.getElementById('couponSuccess').style.display = 'block';
+      document.getElementById('couponInput').disabled = true;
+      renderSummary();
+      showToast('🎉 Coupon applied! 20% off');
+    } else {
+      showToast('❌ Invalid coupon code. Try PAWFECT20');
+    }
+  }
+
+  // ===================== RECOMMENDED =====================
+  function addRec(name, price, emoji) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.qty++; }
+    else { cart.push({ name, qty: 1 }); }
+    renderCart();
+    showToast(`${emoji} ${name} added to cart!`);
+  }
+
+  // ===================== STEP NAVIGATION =====================
+  function goToStep(n) {
+    if (n > currentStep) return; // Can't skip forward
+    showStep(n);
+  }
+
+  function showStep(n) {
+    currentStep = n;
+    document.querySelectorAll('.screen').forEach((s, i) => s.classList.toggle('active', i + 1 === n));
+    document.querySelectorAll('.step').forEach((s, i) => {
+      s.classList.remove('active', 'done');
+      if (i + 1 === n) s.classList.add('active');
+      else if (i + 1 < n) s.classList.add('done');
+    });
+
+    // Update step numbers (show ✓ for done)
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`s${i}num`);
+      if (i < n) el.textContent = '✓';
+      else el.textContent = i;
+    }
+
+    const progress = { 1: '25%', 2: '50%', 3: '75%', 4: '100%' };
+    document.getElementById('progressFill').style.width = progress[n];
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===================== SHIPPING =====================
+  function selectShipping(el, cost, label) {
+    document.querySelectorAll('.ship-opt').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    shippingCost = cost;
+    shippingLabel = label;
+    renderSummary();
+  }
+
+  function proceedToShipping() {
+    if (cart.length === 0) { showToast('⚠️ Your cart is empty!'); return; }
+    showStep(2);
+  }
+
+  function proceedToPayment() {
+    const fields = [
+      { id: 'fname', fg: 'fg-fname', check: v => v.length >= 2 },
+      { id: 'lname', fg: 'fg-lname', check: v => v.length >= 2 },
+      { id: 'email', fg: 'fg-email', check: v => v.includes('@') && v.includes('.') },
+      { id: 'phone', fg: 'fg-phone', check: v => v.replace(/\D/g,'').length >= 10 },
+      { id: 'address', fg: 'fg-address', check: v => v.length >= 5 },
+      { id: 'city', fg: 'fg-city', check: v => v.length >= 2 },
+      { id: 'pincode', fg: 'fg-pincode', check: v => /^\d{6}$/.test(v) },
+      { id: 'state', fg: 'fg-state', check: v => v !== '' },
+    ];
+    let valid = true;
+    fields.forEach(f => {
+      const val = document.getElementById(f.id).value.trim();
+      const ok = f.check(val);
+      document.getElementById(f.fg).classList.toggle('has-error', !ok);
+      if (!ok) valid = false;
+    });
+    if (!valid) { showToast('⚠️ Please fill in all required fields correctly'); return; }
+    showStep(3);
+  }
+
+  // ===================== PAYMENT =====================
+  function selectPayment(el, method) {
+    document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    paymentMethod = method;
+    ['card','upi','netbanking','cod'].forEach(m => {
+      const f = document.getElementById('payForm-' + m);
+      if (f) f.style.display = m === method ? 'block' : 'none';
+    });
+    renderSummary();
+  }
+
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g, '').substring(0, 16);
+    input.value = v.replace(/(.{4})/g, '$1  ').trim();
+    const icon = document.getElementById('cardTypeIcon');
+    if (v.startsWith('4')) icon.textContent = '💳';
+    else if (v.startsWith('5')) icon.textContent = '💳';
+    else if (v.startsWith('3')) icon.textContent = '💳';
+    else icon.textContent = '💳';
+  }
+
+  function formatExpiry(input) {
+    let v = input.value.replace(/\D/g, '');
+    if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2, 4);
+    input.value = v;
+  }
+
+  // ===================== PLACE ORDER =====================
+  function placeOrder() {
+    // Validate payment fields
+    if (paymentMethod === 'card') {
+      const cardname = document.getElementById('cardname').value.trim();
+      const cardnum = document.getElementById('cardnum').value.replace(/\s/g,'');
+      const expiry = document.getElementById('expiry').value;
+      const cvv = document.getElementById('cvv').value;
+      let valid = true;
+      document.getElementById('fg-cardname').classList.toggle('has-error', cardname.length < 2); if(cardname.length < 2) valid = false;
+      document.getElementById('fg-cardnum').classList.toggle('has-error', cardnum.length !== 16); if(cardnum.length !== 16) valid = false;
+      document.getElementById('fg-expiry').classList.toggle('has-error', expiry.length < 7); if(expiry.length < 7) valid = false;
+      document.getElementById('fg-cvv').classList.toggle('has-error', cvv.length < 3); if(cvv.length < 3) valid = false;
+      if (!valid) { showToast('⚠️ Please fill in your card details correctly'); return; }
+    } else if (paymentMethod === 'upi') {
+      const upi = document.getElementById('upiid').value.trim();
+      const ok = upi.includes('@');
+      document.getElementById('fg-upi').classList.toggle('has-error', !ok);
+      if (!ok) { showToast('⚠️ Please enter a valid UPI ID'); return; }
+    } else if (paymentMethod === 'netbanking') {
+      const bank = document.getElementById('bankSelect').value;
+      if (!bank) { showToast('⚠️ Please select a bank'); return; }
+    }
+
+    // Show loading
+    const overlay = document.getElementById('loadingOverlay');
+    const msgs = ['Securing your payment...', 'Confirming order...', 'Almost there...'];
+    let mi = 0;
+    overlay.classList.add('show');
+    const interval = setInterval(() => {
+      if (++mi < msgs.length) document.getElementById('loadingMsg').textContent = msgs[mi];
+    }, 800);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      overlay.classList.remove('show');
+      showConfirmation();
+    }, 2600);
+  }
+
+  function showConfirmation() {
+    const subtotal = cart.reduce((s, i) => s + (PRICES[i.name] || 0) * i.qty, 0);
+    const discount = couponApplied ? Math.round(subtotal * 0.20) : 0;
+    const codFee = paymentMethod === 'cod' ? 49 : 0;
+    const total = subtotal - discount + shippingCost + codFee;
+
+    const orderId = 'PF-2024-' + Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('orderIdLabel').textContent = 'Order #' + orderId;
+
+    const email = document.getElementById('email').value;
+    document.getElementById('confEmail').textContent = email;
+
+    const fname = document.getElementById('fname').value;
+    const lname = document.getElementById('lname').value;
+    const city = document.getElementById('city').value;
+    const addr = document.getElementById('address').value;
+    document.getElementById('confName').textContent = fname + ' ' + lname;
+    document.getElementById('confAddress').textContent = addr + ', ' + city;
+    document.getElementById('confTotal').textContent = '₹' + total.toLocaleString('en-IN');
+    document.getElementById('confShipping').textContent = shippingCost === 0 ? 'FREE' : '₹' + shippingCost;
+
+    const etas = { 'Standard Delivery': '4–6 business days', 'Express Delivery': '1–2 business days', 'Same Day Delivery': 'Today by 9 PM' };
+    document.getElementById('confETA').textContent = etas[shippingLabel] || '4–6 days';
+
+    document.getElementById('successItemsList').innerHTML = cart.map(item => `
+      <div class="success-row">
+        <span>${EMOJIS[item.name] || '🐾'} ${item.name} ×${item.qty}</span>
+        <span>₹${((PRICES[item.name]||0)*item.qty).toLocaleString('en-IN')}</span>
+      </div>
+    `).join('');
+
+    showStep(4);
+    launchConfetti();
+  }
+
+  // ===================== CONFETTI =====================
+  function launchConfetti() {
+    const colors = ['#E8A840','#C4562A','#2D5016','#6B4226','#FAF7F2','#f9c74f','#90e0ef'];
+    const container = document.getElementById('confettiContainer');
+    container.innerHTML = '';
+    for (let i = 0; i < 80; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const size = Math.random() * 10 + 6;
+      piece.style.cssText = `
+        left: ${Math.random() * 100}%;
+        width: ${size}px; height: ${size}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        animation-duration: ${Math.random() * 2 + 2}s;
+        animation-delay: ${Math.random() * 1.5}s;
+      `;
+      container.appendChild(piece);
+    }
+    setTimeout(() => container.innerHTML = '', 5000);
+  }
+
+  function trackOrder() {
+    showToast('📦 Opening tracking page... (demo)');
+  }
+
+  // ===================== TOAST =====================
+  function showToast(msg) {
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast'); t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ===================== INIT =====================
+  renderCart();
+</script>
+</body>
+</html>
