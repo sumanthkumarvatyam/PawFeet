@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5WTQ2698');</script>
+<!-- End Google Tag Manager -->
+  
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S8R94FVV2Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-S8R94FVV2Z');
+</script>
+
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5WTQ2698');</script>
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S8R94FVV2Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-S8R94FVV2Z');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Confirmed — PawFect Pet Food &amp; Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #FAF7F2; --warm: #F5EDE0; --amber: #E8A840;
+      --rust: #C4562A; --forest: #2D5016; --bark: #6B4226;
+      --charcoal: #1A1A1A;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(250,247,242,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #e8ddd0; padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--rust); text-decoration: none; }
+    .logo span { color: var(--amber); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--rust); }
+    .nav-cta { background: var(--rust); color: white !important; padding: 0.5rem 1.3rem; border-radius: 50px; }
+    .nav-cta:hover { background: var(--bark) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 5px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--charcoal); border-radius: 2px; }
+    .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid #e8ddd0; padding: 1.5rem 5%; z-index: 99; flex-direction: column; gap: 1rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: 1rem; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+
+    .confirm-hero {
+      padding: 120px 5% 70px;
+      background: linear-gradient(135deg, var(--forest) 0%, #3d6b20 100%);
+      position: relative; overflow: hidden; text-align: center;
+    }
+    .confirm-hero::before {
+      content: '🐾'; position: absolute; right: 6%; top: 50%; transform: translateY(-50%);
+      font-size: 12rem; opacity: 0.08;
+    }
+    .confirm-hero .label {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--amber); margin-bottom: 0.6rem;
+    }
+    .check-ring {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 3px solid var(--amber);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: popIn 0.6s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .check-ring svg { width: 40px; height: 40px; stroke: var(--amber); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .check-ring svg polyline { stroke-dasharray: 55; stroke-dashoffset: 55; animation: drawCheck 0.45s 0.7s ease forwards; }
+    @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+    @keyframes popIn { from { opacity:0; transform:scale(0.4); } to { opacity:1; transform:scale(1); } }
+    @keyframes riseUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+
+    .confirm-hero h1 {
+      font-family: 'Playfair Display', serif; font-size: clamp(2rem,5vw,3rem);
+      font-weight: 900; color: white; margin-bottom: 0.8rem;
+      animation: riseUp 0.6s 0.5s ease both;
+    }
+    .confirm-hero p {
+      font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 480px;
+      margin: 0 auto; line-height: 1.7; animation: riseUp 0.6s 0.65s ease both;
+    }
+
+    .confirm-body {
+      max-width: 860px; margin: 0 auto; padding: 60px 5% 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
+    }
+
+    .summary-card {
+      background: white; border-radius: 24px; padding: 2rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      animation: riseUp 0.6s 0.8s ease both;
+    }
+    .summary-card h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+      margin-bottom: 1.4rem; color: var(--charcoal);
+      padding-bottom: 0.8rem; border-bottom: 2px solid var(--warm);
+    }
+    .bs-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      font-size: 0.87rem; padding: 0.55rem 0; border-bottom: 1px solid #f0e8dd; gap: 1rem;
+    }
+    .bs-row:last-child { border-bottom: none; }
+    .bs-row .bs-label { color: #aaa; font-weight: 400; white-space: nowrap; }
+    .bs-row .bs-val { font-weight: 600; color: var(--charcoal); text-align: right; }
+    .bs-row.highlight .bs-val { color: var(--rust); }
+
+    .steps-card { display: flex; flex-direction: column; gap: 1.2rem; animation: riseUp 0.6s 0.95s ease both; }
+    .next-card-inner { background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+    .next-card-inner h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--charcoal); }
+    .step-item { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+    .step-item:last-child { margin-bottom: 0; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--forest); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 700; flex-shrink: 0; }
+    .step-item h5 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.15rem; }
+    .step-item p { font-size: 0.8rem; color: #888; line-height: 1.5; }
+
+    .cta-card { background: var(--charcoal); border-radius: 24px; padding: 2rem; color: white; text-align: center; }
+    .cta-card p { font-size: 0.9rem; color: #aaa; line-height: 1.6; margin-bottom: 1.2rem; }
+    .btn-primary { background: var(--rust); color: white; padding: 0.85rem 2rem; border: none; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; width: 100%; justify-content: center; margin-bottom: 0.8rem; }
+    .btn-primary:hover { background: var(--bark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,86,42,0.3); }
+    .btn-outline { background: transparent; color: #ccc; padding: 0.75rem 2rem; border: 1.5px solid rgba(255,255,255,0.15); border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; width: 100%; justify-content: center; }
+    .btn-outline:hover { border-color: var(--amber); color: var(--amber); }
+
+    .vet-mini { display: flex; align-items: center; gap: 0.9rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 0.9rem 1rem; margin-bottom: 1.2rem; text-align: left; }
+    .vet-mini .vet-emo { font-size: 2rem; }
+    .vet-mini strong { display: block; font-size: 0.88rem; color: white; }
+    .vet-mini small { font-size: 0.75rem; color: #888; }
+
+    footer { background: var(--charcoal); color: #ccc; padding: 60px 5% 30px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+    .footer-brand p { font-size: 0.88rem; line-height: 1.7; color: #999; margin-top: 1rem; }
+    .footer-col h4 { color: white; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-col a { text-decoration: none; color: #999; font-size: 0.88rem; transition: color 0.2s; cursor: pointer; }
+    .footer-col a:hover { color: var(--amber); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; color: #666; }
+    .social-links { display: flex; gap: 0.7rem; }
+    .social-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all 0.2s; text-decoration: none; }
+    .social-btn:hover { background: var(--amber); color: white; border-color: var(--amber); }
+
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--forest); color: white; padding: 0.8rem 1.4rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); z-index: 999; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media(max-width:700px) { .confirm-body { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr 1fr; } .nav-links { display: none; } .hamburger { display: flex; } }
+    @media(max-width:480px) { .footer-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WTQ2698"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<nav id="navbar">
+  <a href="index.html" class="logo">Paw<span>Fect</span></a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="caretips.html">Care Tips</a></li>
+    <li><a href="products.html" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html">Shop</a>
+  <a href="products.html">Products</a>
+  <a href="caretips.html">Care Tips</a>
+  <a href="products.html">Shop Now →</a>
+</div>
+
+<div class="confirm-hero">
+  <div class="check-ring">
+    <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg>
+  </div>
+  <div class="label">Booking Confirmed</div>
+  <h1>You're All Set! 🎉</h1>
+  <p>Your free vet consultation is confirmed. We'll be in touch shortly with everything you need.</p>
+</div>
+
+<div class="confirm-body">
+
+  <div class="summary-card">
+    <h3>📋 Your Booking Summary</h3>
+    <div class="bs-row">
+      <span class="bs-label">Status</span>
+      <span class="bs-val" style="color:var(--forest)">✅ Confirmed</span>
+    </div>
+    <div class="bs-row">
+      <span class="bs-label">Service</span>
+      <span class="bs-val">Free Vet Consultation</span>
+    </div>
+    <div class="bs-row highlight">
+      <span class="bs-label">Date &amp; Time</span>
+      <span class="bs-val" id="confirm-slot">—</span>
+    </div>
+    <div class="bs-row">
+      <span class="bs-label">Vet</span>
+      <span class="bs-val" id="confirm-vet">—</span>
+    </div>
+    <div class="bs-row">
+      <span class="bs-label">Call via</span>
+      <span class="bs-val" id="confirm-call">—</span>
+    </div>
+    <div class="bs-row">
+      <span class="bs-label">Pet</span>
+      <span class="bs-val" id="confirm-pet">—</span>
+    </div>
+    <div class="bs-row">
+      <span class="bs-label">Concern</span>
+      <span class="bs-val" id="confirm-concern">—</span>
+    </div>
+    <div class="bs-row">
+      <span class="bs-label">Confirmation sent to</span>
+      <span class="bs-val" id="confirm-email">—</span>
+    </div>
+  </div>
+
+  <div class="steps-card">
+    <div class="next-card-inner">
+      <h3>What Happens Next?</h3>
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div><h5>Check Your Inbox</h5><p>A confirmation email will arrive within 5 minutes with your booking details and call link.</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div><h5>Our Vet Calls You</h5><p>Your chosen vet will connect at the selected time via your preferred method.</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div><h5>Get Your Free Diet Plan</h5><p>Walk away with a personalised nutrition plan tailored to your pet — at zero cost.</p></div>
+      </div>
+    </div>
+
+    <div class="cta-card">
+      <div class="vet-mini" id="confirm-vet-card">
+        <div class="vet-emo">👩‍⚕️</div>
+        <div>
+          <strong id="cta-vet-name">Dr. Meera Pillai</strong>
+          <small id="cta-vet-spec">Dog &amp; Cat Nutrition</small>
+        </div>
+      </div>
+      <p>While you wait, browse our vet-approved products — handpicked for your pet's specific needs.</p>
+      <a href="products.html?filter=health" class="btn-primary">Browse Vet-Approved Products →</a>
+      <a href="caretips.html" class="btn-outline">← Back to Care Tips</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Paw<span style="color:var(--amber)">Fect</span></a>
+      <p>Premium pet food and care essentials, crafted with love and backed by veterinary science.</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="products.html?filter=dog">Dog Food</a></li><li><a href="products.html?filter=cat">Cat Food</a></li><li><a href="products.html?filter=bird">Bird Seeds</a></li><li><a href="products.html?filter=health">Supplements</a></li></ul></div>
+    <div class="footer-col"><h4>Learn</h4><ul><li><a href="caretips.html#dog-tips">Dog Tips</a></li><li><a href="caretips.html#cat-tips">Cat Tips</a></li><li><a href="caretips.html#nutrition">Nutrition Guide</a></li><li><a href="caretips.html#faq">FAQ</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Vet Partners</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 PawFect. All rights reserved.</span>
+    <div class="social-links"><a class="social-btn" href="#">📸</a><a class="social-btn" href="#">👍</a><a class="social-btn" href="#">🐦</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">✅ Booking confirmed!</div>
+
+<script>
+  // ── Read booking data saved by caretips.html ─────────────────────────────────
+  function readBooking() {
+    try { var r = sessionStorage.getItem('pawfect_booking'); return r ? JSON.parse(r) : null; }
+    catch(e) { return null; }
+  }
+
+  function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val || '—'; }
+
+  function fillSummary(d) {
+    if (!d) return;
+    setText('confirm-slot',    d.slot);
+    setText('confirm-vet',     d.vet);
+    setText('confirm-call',    d.callPref);
+    setText('confirm-email',   d.email);
+    setText('confirm-concern', d.concern);
+
+    var pet = '';
+    if (d.petName) pet += d.petName;
+    if (d.petType) pet += ' (' + d.petType;
+    if (d.petAge)  pet += ', ' + d.petAge;
+    if (d.petType) pet += ')';
+    setText('confirm-pet', pet);
+
+    if (d.vet) {
+      setText('cta-vet-name', d.vet);
+      var emos  = { 'Dr. Meera Pillai':'👩‍⚕️','Dr. Arjun Nair':'👨‍⚕️','Dr. Anita Rao':'👩‍⚕️' };
+      var specs = { 'Dr. Meera Pillai':'Dog & Cat Nutrition','Dr. Arjun Nair':'Exotic & Small Pets','Dr. Anita Rao':'Holistic Pet Wellness' };
+      document.querySelector('#confirm-vet-card .vet-emo').textContent = emos[d.vet]  || '👩‍⚕️';
+      setText('cta-vet-spec', specs[d.vet] || '');
+    }
+  }
+
+  fillSummary(readBooking());
+
+  setTimeout(function() {
+    var t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 3500);
+  }, 800);
+
+  window.addEventListener('scroll', function() {
+    document.getElementById('navbar').style.boxShadow =
+      window.scrollY > 20 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none';
+  });
+</script>
+
+<!--
+═══════════════════════════════════════════════════════
+  HOW TO CONNECT caretips.html → caretipsthanks.html
+═══════════════════════════════════════════════════════
+  In caretips.html, replace the submitBooking() function's
+  success block with:
+
+    // 1. Save form data for the thank-you page
+    sessionStorage.setItem('pawfect_booking', JSON.stringify({
+      fname: formData.fname, lname: formData.lname,
+      email: formData.email, phone: formData.phone,
+      petName: formData.petName, petType: formData.petType,
+      petAge: formData.petAge, concern: formData.concern,
+      vet: formData.vet, slot: formData.slot,
+      callPref: formData.callPref
+    }));
+
+    // 2. Redirect to thank-you page (fires Google Ads conversion tag on load)
+    window.location.href = 'caretipsthanks.html';
+
+  GOOGLE ADS SETUP:
+  → Replace AW-XXXXXXXX   with your Conversion ID
+  → Replace YYYYYYYYYYYY  with your Conversion Label
+  → Find both in: Google Ads > Goals > Conversions > [your action]
+═══════════════════════════════════════════════════════
+-->
+
+</body>
+</html>
