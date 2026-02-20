@@ -765,10 +765,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '</div>' +
         '<div class="bs-row"><span>Call via</span><span>' + formData.callPref + '</span></div>' +
       '</div>';
-    document.getElementById('bookingFormState').style.display = 'none';
-    document.getElementById('bookingSuccessState').style.display = 'block';
-    document.getElementById('consult').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('✅ Booking confirmed! Check your email.');
+// Save booking data for thank-you page
+sessionStorage.setItem('pawfect_booking', JSON.stringify({
+  fname: formData.fname, lname: formData.lname,
+  email: formData.email, phone: formData.phone,
+  petName: formData.petName, petType: formData.petType,
+  petAge: formData.petAge, concern: formData.concern,
+  vet: formData.vet, slot: formData.slot,
+  callPref: formData.callPref
+}));
+
+// Redirect to thank-you page (Google Ads conversion fires there)
+window.location.href = 'caretipsthanks.html';
   }
 
   function resetForm() {
